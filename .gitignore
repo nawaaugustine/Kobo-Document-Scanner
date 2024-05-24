@@ -40,3 +40,56 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Angular
+dist/
+.tmp/
+out-tsc/
+npm-debug.log
+e2e/
+
+# Capacitor
+android/capacitor.settings.gradle
+android/capacitor.build.gradle
+android/capacitor.config.json
+android/app/build/
+android/app/capacitor.build.gradle
+android/app/capacitor.settings.gradle
+ios/App/App/Capacitor.config.json
+ios/App/App/Capacitor.plist
+
+# Capacitor Generated
+ios/App/public
+ios/App/www
+android/app/src/main/assets/public
+android/app/src/main/assets/www
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+*.so
+*.apk
+*.ap_
+*.d
+build/
+captures/
+.externalNativeBuild
+.cxx
+*.db
+
+# Visual Studio Code
+.vscode/
+
+# Environment variables
+/environments/*.ts
+!environments/environment.model.ts
+

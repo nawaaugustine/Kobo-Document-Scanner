@@ -1,0 +1,80 @@
+.container {
+    text-align: center;
+    margin-top: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content {
+    margin-top: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .subtitle {
+    font-size: 14px; /* Adjust font size as needed */
+    display: block; /* Ensure subtitle is on a new line */
+    color: #ffffff; /* Set to a lighter color for visibility */
+  }
+  
+  .toolbar-title {
+    display: flex;
+    flex-direction: column;
+    align-items: start; /* Align text to the start of the div */
+  }
+  
+  .spinner {
+    margin-top: 20px;
+  }
+  
+  .results {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  button[mat-icon-button] {
+    color: white;
+  }
+  
+.info-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000; /* Ensure it's above other elements */
+}
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--ion-text-color) !important;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons */
+  }
+  
+  button.mat-raised-button {
+    background-color: var(--button-background-color) !important;
+    color: var(--button-text-color) !important;
+    font-size: 16px;
+    padding: 8px 24px;
+    width: 200px; /* Ensure all buttons are the same width */
+    margin-top: 10px; /* Add margin between buttons */
+  }
+  

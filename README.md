@@ -1,27 +1,83 @@
-# KoboDocumentScanner
+# Kobo Document Scanner
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
+## Overview
 
-## Development server
+Kobo Document Scanner is a mobile application that integrates with the KoboCollect app to scan documents and send the data back to KoboCollect. The application is built using Angular and Capacitor, allowing it to run as a web application and be deployed on Android devices.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+*   Document scanning using BlinkID
+*   Theme switching between light and dark modes
+*   Integration with KoboCollect for data transmission
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Prerequisites
 
-## Build
+*   [Node.js](https://nodejs.org/) (version 14 or later)
+*   [Angular CLI](https://angular.io/cli)
+*   [Capacitor CLI](https://capacitorjs.com/docs/getting-started)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Setup
 
-## Running unit tests
+1.  **Clone the repository:**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+        git clone https://github.com/yourusername/kobo-document-scanner.git
+        cd kobo-document-scanner
 
-## Running end-to-end tests
+2.  **Install dependencies:**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+        npm install
 
-## Further help
+3.  **Build the Angular project:**
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+        ng build
+
+4.  **Add Capacitor platforms:**
+
+        npx cap add android
+
+5.  **Sync Capacitor with the project:**
+
+        npx cap sync android
+
+## Development
+
+### Running the Application
+
+1.  **Serve the Angular application:**
+
+        ng serve
+
+    Open your browser and navigate to [http://localhost:4200](http://localhost:4200).
+
+2.  **Run the application on an Android device or emulator:**
+
+        npx cap open android
+
+    Build and run the project from Android Studio.
+
+### Building for Production
+
+1.  **Build the Angular project for production:**
+
+        ng build --prod
+
+2.  **Sync Capacitor with the project:**
+
+        npx cap sync android
+
+## Contributing
+
+1.  Fork the repository
+2.  Create a new branch (`git checkout -b feature/your-feature-name`)
+3.  Make your changes
+4.  Commit your changes (`git commit -am 'Add some feature'`)
+5.  Push to the branch (`git push origin feature/your-feature-name`)
+6.  Create a new Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the `LICENSE` file for details.
+
+## Contact
+
+For any inquiries or issues, please contact [yourname@yourdomain.com](mailto:yourname@yourdomain.com).
