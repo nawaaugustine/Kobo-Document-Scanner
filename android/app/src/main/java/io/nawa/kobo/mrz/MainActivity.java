@@ -42,6 +42,11 @@ public class MainActivity extends BridgeActivity {
   /**
    * Sends data back to the calling activity.
    *
+   * @param dateOfBirth The date of birth.
+   * @param CoAAddress The address in CoA.
+   * @param province The province in AFG.
+   * @param district The district in AFG.
+   * @param village The village in AFG.
    * @param documentNumber The document number.
    * @param fullName The full name.
    * @param fathersName The father's name.
@@ -50,7 +55,7 @@ public class MainActivity extends BridgeActivity {
    * @param frontImage The base64 encoded front image.
    * @param backImage The base64 encoded back image.
    */
-  public void sendData(String documentNumber, String fullName, String fathersName, int age, String gender, String frontImage, String backImage) {
+  public void sendData(Date dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, String frontImage, String backImage) {
     try {
       Intent intent = new Intent();
 
@@ -73,7 +78,7 @@ public class MainActivity extends BridgeActivity {
       }
 
       // Add extras to the intent, including the image URIs
-      IntentUtils.addExtras(intent, documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri);
+      IntentUtils.addExtras(intent, dateOfBirth, CoAAddress, province, district, village, documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri);
 
       // Set ClipData for the images
       if (frontImageUri != null) {

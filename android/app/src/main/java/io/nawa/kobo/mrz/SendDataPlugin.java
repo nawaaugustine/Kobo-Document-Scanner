@@ -22,6 +22,12 @@ public class SendDataPlugin extends Plugin {
   public void sendData(PluginCall call) {
     try {
       // Extract data from the call
+      Date dateOfBirth = call.getString("dateOfBirth");
+      String CoAAddress = call.getString("CoAAddress");
+      String province = call.getString("province");
+      String district = call.getString("district");
+      String village = call.getString("village");
+      
       String documentNumber = call.getString("documentNumber");
       String fullName = call.getString("fullName");
       String fathersName = call.getString("fathersName");
@@ -31,16 +37,14 @@ public class SendDataPlugin extends Plugin {
       String backImagePath = call.getString("backImage");
 
       // Check for missing parameters
-      if (documentNumber == null || fullName == null || fathersName == null || age == null || gender == null) {
+      if (documentNumber == null || fullName == null || fathersName == null || age == null || gender == null || dateOfBirth == null|| CoAAddress == null|| province == null|| district == null|| village == null) {
         call.reject("Missing required parameters");
         Log.e(TAG, "Missing required parameters");
         return;
       }
 
-      Log.d(TAG, "Received data: " + documentNumber + ", " + fullName + ", " + fathersName + ", " + age + ", " + gender + ", " + frontImagePath + ", " + backImagePath);
-
       // Call MainActivity's sendData method to handle the data
-      ((MainActivity)getActivity()).sendData(documentNumber, fullName, fathersName, age, gender, frontImagePath, backImagePath);
+      ((MainActivity)getActivity()).sendData(dateOfBirth, CoAAddress, province, district, village, documentNumber, fullName, fathersName, age, gender, frontImagePath, backImagePath);
 
       // Create a result object to send back to the JavaScript side
       JSObject result = new JSObject();

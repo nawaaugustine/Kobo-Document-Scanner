@@ -118,6 +118,12 @@ export class AppComponent implements OnInit {
   private async sendDataToKoboCollect(result: any): Promise<void> {
     try {
       await SendData.sendData({
+        dateOfBirth: result.dateOfBirth,
+        CoAAddress: result.address,
+        province: result.province,
+        district: result.district,
+        village: result.village,
+        
         documentNumber: result.documentNumber,
         fullName: result.fullName,
         fathersName: result.fathersName,

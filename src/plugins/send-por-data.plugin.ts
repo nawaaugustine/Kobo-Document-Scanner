@@ -3,6 +3,11 @@ import { registerPlugin } from '@capacitor/core';
 // Interface for the SendDataPlugin
 export interface SendDataPlugin {
   sendData(options: {
+    dateOfBirth: Date,
+    CoAAddress: string,
+    province: string,
+    district: string,
+    village: string,
     documentNumber: string;
     fullName: string;
     fathersName: string;
