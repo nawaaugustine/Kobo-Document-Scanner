@@ -165,22 +165,29 @@ export class AppComponent implements OnInit {
     if (this.isInfoDialogOpen) {
       return; // Prevent opening multiple dialogs
     }
-
+  
     this.isInfoDialogOpen = true;
     console.log('showInfo called');
     const dialogRef = this.dialog.open(InfoDialogComponent, {
-      width: '300px',
-      position: { bottom: '80px', right: '160px' },
+      width: '80vw', // Adjust the width as necessary
+      maxWidth: '600px', // Adjust the max-width as necessary
+      autoFocus: false, // Prevent autofocus issues
+      disableClose: true, // Prevent closing on backdrop click
+      position: {
+        top: '0%', // Adjust the top position as necessary
+        left: '10%',
+        bottom: '5%'
+      }
     });
-
-    dialogRef.afterOpened().subscribe(() => {
-      console.log('Dialog opened');
-    });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       console.log('Dialog closed');
       this.isInfoDialogOpen = false; // Reset the flag when dialog is closed
       console.log(result);
+    });
+  
+    dialogRef.afterOpened().subscribe(() => {
+      console.log('Dialog opened');
     });
   }
 

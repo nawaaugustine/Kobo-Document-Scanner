@@ -1,78 +1,25 @@
+// Custom Theming for Angular Material
 @import 'theme/custom-theme';
 
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
+// Style Switcher
 body.light-theme {
-  --primary-color: #044F85 !important; /* Example: Indigo */
-  --accent-color: #18375F; /* Example: Pink */
-  --warn-color: #E1CC0D; /* Example: Red */
+  --primary-color: #044F85 !important;
+  --accent-color: #18375F;
+  --warn-color: #E1CC0D;
   background-color: #ffffff;
   color: #000000;
-
-  --ion-background-color: #ffffff !important;
-  --ion-text-color: #000000 !important;
-  --ion-border-color: #cccccc !important;
-  --ion-card-background: #ffffff !important;
-
-  --ion-toolbar-background: #044f85 !important;
-  --ion-toolbar-color: #ffffff !important;
-
 }
 
 body.dark-theme {
-    --primary-color: #044F85; /* Example: Indigo */
-    --accent-color: #18375F; /* Example: Pink */
-    --warn-color: #E1CC0D; /* Example: Red */
+  --primary-color: #044F85;
+  --accent-color: #18375F;
+  --warn-color: #E1CC0D;
   background-color: #121212;
   color: #ffffff;
-
-  --ion-background-color: #121212 !important;
-  --ion-text-color: #ffffff !important;
-  --ion-border-color: #222222 !important;
-  --ion-card-background: #1e1e1e !important;
-
-  --ion-toolbar-background: #044f85 !important;
-  --ion-toolbar-color: #ffffff !important;
 }
 
-.mat-button {
-  background-color: var(--accent-color);
-  color: var(--text-color);
+:root {
+    --second-blue: #18375F;
+    --yellow: #FAEB00;
 }
-
-.mat-mdc-raised-button.mat-primary {
-    --mdc-protected-button-container-color: #044f85; /* New container color */
-    --mdc-protected-button-label-text-color: #ffffff; /* New label text color */
-    --mat-protected-button-state-layer-color: rgba(255, 255, 255, 0.2); /* New state layer color */
-    --mat-protected-button-ripple-color: rgba(255, 255, 255, 0.3); /* New ripple color */
-  }
-  
-  .mat-mdc-fab.mat-primary {
-    --mdc-fab-container-color: #BB9D21 !important;
-    --mat-fab-foreground-color: white;
-    --mat-fab-state-layer-color: white;
-    --mat-fab-ripple-color: rgba(187, 157, 33, 0.1);
-  }
-  
-  .mat-mdc-raised-button.mat-accent {
-    --mdc-protected-button-container-color: #FF8490 !important;
-    --mdc-protected-button-label-text-color: white;
-    --mat-protected-button-state-layer-color: white;
-    --mat-protected-button-ripple-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .mat-dialog-container {
-    z-index: 1000 !important;
-    background-color: #fff; // Ensure the background color is set correctly
-    color: #000; // Ensure the text color is visible
-  }
-
-  .mat-toolbar {
-    background-color: #044f85 !important; /* Set your desired color */
-    color: #ffffff !important; /* Ensure the text color is consistent */
-  }
   

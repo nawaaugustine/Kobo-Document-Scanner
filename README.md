@@ -2,7 +2,7 @@
 
 ## Overview
 
-Kobo Document Scanner is a mobile application that integrates with the KoboCollect app to scan documents and send the data back to KoboCollect. The application is built using Angular and Capacitor, allowing it to run as a web application and be deployed on Android devices.
+Kobo Document Scanner is a mobile application that integrates with the KoboCollect app to scan documents and send the data back to KoboCollect. The application is built using Angular and Capacitor.
 
 ## Features
 
@@ -80,4 +80,4 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 ## Contact
 
-For any inquiries or issues, please contact [yourname@yourdomain.com](mailto:yourname@yourdomain.com).
+For any inquiries or issues, please contact [nawaa@unhcr.org](mailto:nawaa@unhcr.org).

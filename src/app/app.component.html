@@ -1,6 +1,6 @@
 <div class="container">
   <!-- Application Toolbar with Theme Toggle Button -->
-  <mat-toolbar color="primary">
+  <mat-toolbar color="primary" class="toolbar">
     <div class="toolbar-title">
       <span>{{ title }}</span>
       <span class="subtitle">Developed by RBAP DIMA</span> <!-- Add subtitle here -->
@@ -16,12 +16,15 @@
     <h1>Supported Document</h1>
     <div class="button-container">
       <button mat-raised-button color="primary" (click)="onScanClick()" [disabled]="isLoading">
+        <mat-icon>document_scanner</mat-icon>
         Scan POR Card
       </button>
       <button mat-raised-button color="accent" (click)="comingSoon()">
+        <mat-icon>document_scanner</mat-icon>
         Scan ACC Card
       </button>
       <button mat-raised-button color="accent" (click)="comingSoon()">
+        <mat-icon>document_scanner</mat-icon>
         Scan Tazkira
       </button>
     </div>
@@ -43,7 +46,8 @@
   </div>
 
   <!-- Floating Information Button -->
-  <button mat-fab color="primary" class="info-button" (click)="showInfo()">
-    <mat-icon>info</mat-icon>
+  <button mat-fab color="accent" class="info-button" (click)="showInfo()">
+    <mat-icon>help</mat-icon>
   </button>
+
 </div>
