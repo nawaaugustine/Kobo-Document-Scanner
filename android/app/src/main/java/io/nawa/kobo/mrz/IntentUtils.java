@@ -9,7 +9,7 @@ public class IntentUtils {
   /**
    * Adds extras to the intent.
    *
-   * 
+   *
    * @param intent The intent to which extras are to be added.
    * @param dateOfBirth The date of birth.
    * @param CoAAddress The address in CoA.
@@ -24,7 +24,7 @@ public class IntentUtils {
    * @param frontImageUri The URI of the front image.
    * @param backImageUri The URI of the back image.
    */
-  public static void addExtras(Intent intent, Date dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, Uri frontImageUri, Uri backImageUri) {
+  public static void addExtras(Intent intent, String dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, Uri frontImageUri, Uri backImageUri) {
     intent.putExtra("dateOfBirth", dateOfBirth); // Add date of birth to the intent
     intent.putExtra("CoAAddress", CoAAddress); // Add address in CoA to the intent
     intent.putExtra("province", province); // Add province in AFG to the intent
@@ -52,7 +52,7 @@ public class IntentUtils {
    * @return A Data object containing the extracted extras.
    */
   public static Data extractExtras(Intent intent) {
-    Date dateOfBirth = intent.getDateExtra("dateOfBirth");
+    String dateOfBirth = intent.getStringExtra("dateOfBirth");
     String CoAAddress = intent.getStringExtra("CoAAddress");
     String province = intent.getStringExtra("province");
     String district = intent.getStringExtra("district");
@@ -73,7 +73,7 @@ public class IntentUtils {
    * Data class to hold extracted extras.
    */
   public static class Data {
-    public final Date dateOfBirth;
+    public final String dateOfBirth;
     public final String CoAAddress;
     public final String province;
     public final String district;
@@ -86,7 +86,7 @@ public class IntentUtils {
     public final Uri frontImageUri;
     public final Uri backImageUri;
 
-    public Data(Date dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, Uri frontImageUri, Uri backImageUri) {
+    public Data(String dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, Uri frontImageUri, Uri backImageUri) {
       this.dateOfBirth = dateOfBirth;
       this.CoAAddress = CoAAddress;
       this.province = province;

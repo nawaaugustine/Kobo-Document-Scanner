@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import androidx.core.content.FileProvider;
 import com.getcapacitor.BridgeActivity;
 import java.io.File;
 
@@ -55,7 +54,7 @@ public class MainActivity extends BridgeActivity {
    * @param frontImage The base64 encoded front image.
    * @param backImage The base64 encoded back image.
    */
-  public void sendData(Date dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, String frontImage, String backImage) {
+  public void sendData(String dateOfBirth, String CoAAddress, String province, String district, String village, String documentNumber, String fullName, String fathersName, int age, String gender, String frontImage, String backImage) {
     try {
       Intent intent = new Intent();
 

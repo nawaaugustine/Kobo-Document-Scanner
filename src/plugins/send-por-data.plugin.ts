@@ -3,7 +3,7 @@ import { registerPlugin } from '@capacitor/core';
 // Interface for the SendDataPlugin
 export interface SendDataPlugin {
   sendData(options: {
-    dateOfBirth: Date,
+    dateOfBirth: string,
     CoAAddress: string,
     province: string,
     district: string,

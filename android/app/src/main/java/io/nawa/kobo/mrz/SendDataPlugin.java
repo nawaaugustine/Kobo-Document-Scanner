@@ -22,12 +22,12 @@ public class SendDataPlugin extends Plugin {
   public void sendData(PluginCall call) {
     try {
       // Extract data from the call
-      Date dateOfBirth = call.getString("dateOfBirth");
+      String dateOfBirth = call.getString("dateOfBirth");
       String CoAAddress = call.getString("CoAAddress");
       String province = call.getString("province");
       String district = call.getString("district");
       String village = call.getString("village");
-      
+
       String documentNumber = call.getString("documentNumber");
       String fullName = call.getString("fullName");
       String fathersName = call.getString("fathersName");

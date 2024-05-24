@@ -59,7 +59,7 @@ Kobo Document Scanner is a mobile application that integrates with the KoboColle
 
 1.  **Build the Angular project for production:**
 
-        ng build --prod
+        ng build --configuration production
 
 2.  **Sync Capacitor with the project:**
 
