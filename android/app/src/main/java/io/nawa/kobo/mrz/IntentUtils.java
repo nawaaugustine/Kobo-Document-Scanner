@@ -35,6 +35,16 @@ public class IntentUtils {
     intent.putExtra("fathersName", fathersName); // Add father's name to the intent
     intent.putExtra("age", age); // Add age to the intent
     intent.putExtra("gender", gender); // Add gender to the intent
+    //Necessary duplication for kobo child repeat group as kobo is refusing to accept duplicated values in the dependent repeat group 
+    intent.putExtra("fullName_dep", fullName);
+    intent.putExtra("dateOfBirth_dep", dateOfBirth);
+    intent.putExtra("documentNumber_dep", documentNumber);
+    intent.putExtra("fathersName_dep", fathersName);
+    intent.putExtra("gender_dep", gender);
+    intent.putExtra("age_dep", age);
+    intent.putExtra("frontImageUri_dep", frontImageUri);
+    intent.putExtra("backImageUri_dep", backImageUri);
+
 
     if (frontImageUri != null) {
       intent.putExtra("frontImageUri", frontImageUri.toString()); // Add front image URI to the intent

@@ -31,12 +31,18 @@ public class MainActivity extends BridgeActivity {
   }
 
   private void showLaunchFromKoboCollectMessage() {
-    new AlertDialog.Builder(this)
-      .setTitle("Launch from KoboCollect")
-      .setMessage("Please launch this application from KoboCollect.")
-      .setPositiveButton("OK", (dialog, which) -> finish())
-      .show();
-  }
+    AlertDialog alertDialog = new AlertDialog.Builder(this)
+        .setTitle("Launch from KoboCollect")
+        .setMessage("Please launch this application from KoboCollect.")
+        .setPositiveButton("OK", (dialog, which) -> finish())
+        .create();
+        
+    // Make the dialog non-cancelable
+    alertDialog.setCancelable(false);
+    alertDialog.setCanceledOnTouchOutside(false);
+    
+    alertDialog.show();
+}
 
   /**
    * Sends data back to the calling activity.
