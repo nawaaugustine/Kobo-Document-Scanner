@@ -109,26 +109,17 @@ public class IntentUtils {
                     if (dep.has("dateOfBirth")) {
                         JSONObject dobObj = dep.getJSONObject("dateOfBirth");
                         if (dobObj.has("originalString")) {
-                            JSONObject orig = dobObj.getJSONObject("originalString");
-                            if (orig.has("latin")) {
-                                JSONObject latin = orig.getJSONObject("latin");
-                                depDOB = latin.optString("value", "");
-                            }
+                            JSONObject orig = dobObj.getJSONObject("originalDateStringResult");
+                            depDOB = orig.optString("description", "");
                         }
                     }
                     if (dep.has("sex")) {
                         JSONObject sexObj = dep.getJSONObject("sex");
-                        if (sexObj.has("latin")) {
-                            JSONObject latin = sexObj.getJSONObject("latin");
-                            depSex = latin.optString("value", "");
-                        }
+                        depSex = sexObj.optString("description", "");
                     }
                     if (dep.has("documentNumber")) {
                         JSONObject docNumObj = dep.getJSONObject("documentNumber");
-                        if (docNumObj.has("latin")) {
-                            JSONObject latin = docNumObj.getJSONObject("latin");
-                            depDocNum = latin.optString("value", "");
-                        }
+                        depDocNum = docNumObj.optString("description", "");
                     }
                     if (dep.has("fullName")) {
                         JSONObject fullNameObj = dep.getJSONObject("fullName");
