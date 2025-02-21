@@ -1,3 +1,5 @@
+// blink-id-por-scanning.service.ts - Usage: Service for handling the scanning of documents using the BlinkID plugin.
+
 import { Injectable } from '@angular/core';
 import * as BlinkID from '@microblink/blinkid-capacitor';
 import { environment } from '../../environments/environment';
