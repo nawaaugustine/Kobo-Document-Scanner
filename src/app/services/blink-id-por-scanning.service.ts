@@ -130,8 +130,6 @@ export class BlinkIdScanningService {
 
     // Back data extraction
     const backVizResult = result.backVizResult;
-    console.log('Back Viz Data:', JSON.stringify(backVizResult, null, 2));
-
     const backData = {
       dateOfIssue: backVizResult?.dateOfIssue?.originalDateStringResult?.description || "",
       documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.description || "",
