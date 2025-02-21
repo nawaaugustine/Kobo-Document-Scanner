@@ -109,6 +109,8 @@ export class BlinkIdScanningService {
       return null;
     }
 
+    console.log('Reesult Data:', JSON.stringify(result, null, 2));
+
     // Process additional address info to extract province, district, and village.
     const additionalAddress = frontVizResult.additionalAddressInformation?.description || "";
     const [province, district, village] = additionalAddress.split(" ") || ["", "", ""];
@@ -126,8 +128,10 @@ export class BlinkIdScanningService {
       sex: frontVizResult.sex?.description || ""
     };
 
-    // Back data extraction: now read directly from result.backVizResult as requested.
-    const backVizResult = result;
+    // Back data extraction
+    const backVizResult = result.backViz;
+    console.log('Back Viz Data:', JSON.stringify(backVizResult, null, 2));
+
     const backData = {
       dateOfIssue: backVizResult?.dateOfIssue?.originalString?.latin?.value || "",
       documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.latin?.value || "",
