@@ -179,27 +179,25 @@ export class AppComponent implements OnInit {
    */
   private async sendDataToKoboCollect(result: any): Promise<void> {
     try {
-      const fullResult = result['BlinkIDMultiSideRecognizer::Result'];
-      const frontData = fullResult?.frontViz;
-      const backImage = fullResult?.fullDocumentBackImage?.encodedImage || '';
-      const dependentsInfo = JSON.stringify(fullResult?.dependentsInfo || []);
-
+      // Instead of looking for nested keys, use the result directly
+      const frontData = result; // result already contains the front-side data
+      const backImage = result.backImage || '';
+      const dependentsInfo = JSON.stringify(result.dependentsInfo || []);
+  
       await this.retry(
         () =>
           SendData.sendData({
-            dateOfBirth: frontData?.dateOfBirth?.originalString?.latin?.value || '',
-            CoAAddress: frontData?.address?.latin?.value || '',
-            province: '', // Could extract as needed
-            district: '',
-            village: '',
-            documentNumber: frontData?.documentNumber?.latin?.value || '',
-            fullName: frontData?.fullName?.latin?.value || '',
-            fathersName: frontData?.fathersName?.latin?.value || '',
-            age: this.calculateAge(
-              frontData?.dateOfBirth?.originalString?.latin?.value || '01.01.1970'
-            ),
-            gender: frontData?.sex?.latin?.value || '',
-            frontImage: fullResult?.fullDocumentFrontImage?.encodedImage || '',
+            dateOfBirth: frontData.dateOfBirth || '',
+            CoAAddress: frontData.address || '',
+            province: frontData.province || '', // Use processed values if available
+            district: frontData.district || '',
+            village: frontData.village || '',
+            documentNumber: frontData.documentNumber || '',
+            fullName: frontData.fullName || '',
+            fathersName: frontData.fathersName || '',
+            age: this.calculateAge(frontData.dateOfBirth || '01.01.1970'),
+            gender: frontData.sex || '',
+            frontImage: frontData.frontImage || '',
             backImage: backImage,
             dependentsInfo: dependentsInfo
           }),
@@ -211,7 +209,7 @@ export class AppComponent implements OnInit {
       console.error('Failed to send data:', error);
       this.errorMessage = this.getErrorMessage(error);
     }
-  }
+  }  
 
   /**
    * Calculates age from a date string in format DD.MM.YYYY.
