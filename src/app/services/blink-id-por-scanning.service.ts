@@ -127,7 +127,7 @@ export class BlinkIdScanningService {
     };
 
     // Back data extraction: now read directly from result.backVizResult as requested.
-    const backVizResult = result.backVizResult;
+    const backVizResult = result;
     const backData = {
       dateOfIssue: backVizResult?.dateOfIssue?.originalString?.latin?.value || "",
       documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.latin?.value || "",
