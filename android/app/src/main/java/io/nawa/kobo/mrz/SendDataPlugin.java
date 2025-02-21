@@ -63,12 +63,12 @@ public class SendDataPlugin extends Plugin {
                     ", fathersName=" + fathersName +
                     ", age=" + age +
                     ", gender=" + gender +
-                    ", frontImagePath=" + frontImagePath +
-                    ", backImagePath=" + backImagePath +
-                    ", dependentsInfo=" + dependentsInfo +
                     ", dateOfIssue=" + dateOfIssue +
                     ", documentAdditionalNumber=" + documentAdditionalNumber +
-                    ", dateOfExpiry=" + dateOfExpiry);
+                    ", dateOfExpiry=" + dateOfExpiry +                    
+                    ", backImagePath=" + backImagePath +                    
+                    ", frontImagePath=" + frontImagePath +
+                    ", dependentsInfo=" + dependentsInfo);
 
             // Validate required parameters.
             if (documentNumber == null || fullName == null || fathersName == null || age == null ||
