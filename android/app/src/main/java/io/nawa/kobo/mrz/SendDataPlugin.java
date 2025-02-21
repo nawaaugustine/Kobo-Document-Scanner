@@ -18,7 +18,7 @@ public class SendDataPlugin extends Plugin {
     @PluginMethod
     public void sendData(PluginCall call) {
         try {
-            // Extract parameters from the call
+            // Extract standard parameters
             String dateOfBirth = call.getString("dateOfBirth");
             String CoAAddress = call.getString("CoAAddress");
             String province = call.getString("province");
@@ -37,6 +37,20 @@ public class SendDataPlugin extends Plugin {
                 dependentsInfo = "";
             }
 
+            // Extract new backData parameters
+            String dateOfIssue = call.getString("dateOfIssue");
+            String documentAdditionalNumber = call.getString("documentAdditionalNumber");
+            String dateOfExpiry = call.getString("dateOfExpiry");
+            if (dateOfIssue == null) {
+                dateOfIssue = "";
+            }
+            if (documentAdditionalNumber == null) {
+                documentAdditionalNumber = "";
+            }
+            if (dateOfExpiry == null) {
+                dateOfExpiry = "";
+            }
+
             // Log all received parameters for debugging purposes.
             Log.d(TAG, "sendData called with parameters: " +
                     "dateOfBirth=" + dateOfBirth +
@@ -51,7 +65,10 @@ public class SendDataPlugin extends Plugin {
                     ", gender=" + gender +
                     ", frontImagePath=" + frontImagePath +
                     ", backImagePath=" + backImagePath +
-                    ", dependentsInfo=" + dependentsInfo);
+                    ", dependentsInfo=" + dependentsInfo +
+                    ", dateOfIssue=" + dateOfIssue +
+                    ", documentAdditionalNumber=" + documentAdditionalNumber +
+                    ", dateOfExpiry=" + dateOfExpiry);
 
             // Validate required parameters.
             if (documentNumber == null || fullName == null || fathersName == null || age == null ||
@@ -64,9 +81,10 @@ public class SendDataPlugin extends Plugin {
 
             // Forward data to MainActivity for sending back via intent.
             ((MainActivity) getActivity()).sendData(
-                dateOfBirth, CoAAddress, province, district, village,
-                documentNumber, fullName, fathersName, age, gender,
-                frontImagePath, backImagePath, dependentsInfo
+                    dateOfBirth, CoAAddress, province, district, village,
+                    documentNumber, fullName, fathersName, age, gender,
+                    frontImagePath, backImagePath, dependentsInfo,
+                    dateOfIssue, documentAdditionalNumber, dateOfExpiry
             );
             Log.d(TAG, "Data forwarded to MainActivity.sendData");
 

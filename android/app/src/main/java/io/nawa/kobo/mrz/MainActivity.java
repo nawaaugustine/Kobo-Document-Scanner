@@ -39,10 +39,28 @@ public class MainActivity extends BridgeActivity {
      * Sends data back to the calling activity via an intent.
      *
      * Logs each step of the process to help debug where data might be missing.
+     *
+     * @param dateOfBirth Standard front-side field.
+     * @param CoAAddress  Standard front-side field.
+     * @param province    Standard front-side field.
+     * @param district    Standard front-side field.
+     * @param village     Standard front-side field.
+     * @param documentNumber Standard front-side field.
+     * @param fullName    Standard front-side field.
+     * @param fathersName Standard front-side field.
+     * @param age         Standard front-side field.
+     * @param gender      Standard front-side field.
+     * @param frontImage  Front image in Base64 format.
+     * @param backImage   Back image in Base64 format.
+     * @param dependentsInfo Dependent information.
+     * @param dateOfIssue New back-side field.
+     * @param documentAdditionalNumber New back-side field.
+     * @param dateOfExpiry New back-side field.
      */
     public void sendData(String dateOfBirth, String CoAAddress, String province, String district, String village,
                          String documentNumber, String fullName, String fathersName, int age, String gender,
-                         String frontImage, String backImage, String dependentsInfo) {
+                         String frontImage, String backImage, String dependentsInfo,
+                         String dateOfIssue, String documentAdditionalNumber, String dateOfExpiry) {
         Log.d(TAG, "sendData called with: dateOfBirth=" + dateOfBirth +
                 ", CoAAddress=" + CoAAddress +
                 ", province=" + province +
@@ -55,7 +73,10 @@ public class MainActivity extends BridgeActivity {
                 ", gender=" + gender +
                 ", frontImage=" + (frontImage != null ? "[present]" : "null") +
                 ", backImage=" + (backImage != null ? "[present]" : "null") +
-                ", dependentsInfo=" + dependentsInfo);
+                ", dependentsInfo=" + dependentsInfo +
+                ", dateOfIssue=" + dateOfIssue +
+                ", documentAdditionalNumber=" + documentAdditionalNumber +
+                ", dateOfExpiry=" + dateOfExpiry);
         try {
             Intent intent = new Intent();
             Uri frontImageUri = null;
@@ -87,9 +108,10 @@ public class MainActivity extends BridgeActivity {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
 
-            // Add extras to the intent including dependent information.
+            // Add extras to the intent including both standard and new backData fields.
             IntentUtils.addExtras(intent, dateOfBirth, CoAAddress, province, district, village,
-                    documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri, dependentsInfo);
+                    documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri, dependentsInfo,
+                    dateOfIssue, documentAdditionalNumber, dateOfExpiry);
             Log.d(TAG, "Extras added to intent: " + intent.getExtras());
 
             // Add ClipData for images if available.

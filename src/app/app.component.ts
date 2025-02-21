@@ -1,11 +1,3 @@
-/**
- * app.component.ts
- * Main application component that handles:
- * - Document scanning and retry logic
- * - Toggling theme (dark/light)
- * - Inline modal popup using a boolean flag (isInfoOpen)
- */
-
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { BlinkIdScanningService } from './services/blink-id-por-scanning.service';
+import { BlinkIdScanningService, ScanResult } from './services/blink-id-por-scanning.service';
 import { ThemeService } from './services/theme.service';
 import SendData from '../plugins/send-por-data.plugin';
 
@@ -36,18 +28,12 @@ import SendData from '../plugins/send-por-data.plugin';
 })
 export class AppComponent implements OnInit {
   title = 'Kobo Document Scanner';
-
   scanResults: string = '';
   isLoading = false;
   errorMessage: string = '';
   isDarkTheme = false;
-
-  /**
-   * Controls visibility of the inline "Help" popup.
-   */
   isInfoOpen = false;
 
-  // Injecting required services
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
   private snackBar = inject(MatSnackBar);
@@ -57,7 +43,7 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Toggles between dark and light themes.
+   * Toggles the theme between dark and light.
    */
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
@@ -65,31 +51,29 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Opens the inline popup containing help info.
+   * Opens the help/information popup.
    */
   showInfo(): void {
     this.isInfoOpen = true;
   }
 
   /**
-   * Closes the inline popup.
+   * Closes the help/information popup.
    */
   closeInfo(): void {
     this.isInfoOpen = false;
   }
 
   /**
-   * Initiates the document scanning process with retry logic.
+   * Initiates the scanning process with retries.
    */
   async onScanClick(): Promise<void> {
     this.scanResults = '';
     this.errorMessage = '';
     this.isLoading = true;
-
     try {
       const startTime = performance.now();
-      // Retry scanning up to 3 times with 500ms delay
-      const results = await this.retry(
+      const results: ScanResult[] = await this.retry(
         () => this.blinkIdScanningService.scanDocumentMultiSide(),
         3,
         500
@@ -106,11 +90,13 @@ export class AppComponent implements OnInit {
 
   /**
    * Processes the scan results by formatting them for display
-   * and sending the first result to KoboCollect.
+   * and sending the first result to the SendData plugin.
+   * @param results Array of ScanResult objects.
    */
-  private processScanResults(results: any[]): void {
-    if (Array.isArray(results) && results.length > 0) {
+  private processScanResults(results: ScanResult[]): void {
+    if (results && results.length > 0) {
       this.scanResults = this.formatResults(results);
+      // Send the first scan result (adjust if you need a different selection)
       this.sendDataToKoboCollect(results[0]);
     } else {
       this.errorMessage = 'No results or scanning was canceled';
@@ -118,88 +104,66 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Formats both front and back data from multiple scan results into a display string.
+   * Formats scan results into a display string.
+   * @param results Array of ScanResult objects.
+   * @returns A formatted string.
    */
-  private formatResults(results: any[]): string {
-    return results
-      .map((result) => {
-        const frontData = this.extractFrontData(result);
-        const backData = this.extractBackData(result);
+  private formatResults(results: ScanResult[]): string {
+    return results.map(result => {
+      const { frontData, backData } = result;
+      const formattedFront = `
+        Full Name: ${frontData.fullName}
+        Date of Birth: ${frontData.dateOfBirth}
+        Document Number: ${frontData.documentNumber}
+        Father's Name: ${frontData.fathersName}
+        Address: ${frontData.address}
+        Sex: ${frontData.sex}
+      `.trim();
 
-        const formattedFront = `
-          Full Name: ${frontData.fullName}
-          Date of Birth: ${frontData.dateOfBirth}
-          Document Number: ${frontData.documentNumber}
-          Father's Name: ${frontData.fathersName}
-          Address: ${frontData.address}
-          Sex: ${frontData.sex}
-        `.trim();
+      const formattedBack = `
+        Date of Issue: ${backData.dateOfIssue}
+        Document Additional Number: ${backData.documentAdditionalNumber}
+        Date of Expiry: ${backData.dateOfExpiry}
+      `.trim();
 
-        const formattedBack = `
-          Back Date of Issue: ${backData.dateOfIssue}
-          Back Document Additional Number: ${backData.documentAdditionalNumber}
-          Back Date of Expiry: ${backData.dateOfExpiry}
-        `.trim();
-
-        return formattedFront + '\n\n' + formattedBack;
-      })
-      .join('\n\n');
+      return formattedFront + '\n\n' + formattedBack;
+    }).join('\n\n');
   }
 
   /**
-   * Extracts front-side data from a scan result.
+   * Sends scan data to KoboCollect via the SendData plugin.
+   * @param result A structured ScanResult object.
    */
-  private extractFrontData(result: any): any {
-    const front = result['BlinkIDMultiSideRecognizer::Result']?.frontViz;
-    return {
-      fullName: front?.fullName?.latin?.value || '',
-      dateOfBirth: front?.dateOfBirth?.originalString?.latin?.value || '',
-      documentNumber: front?.documentNumber?.latin?.value || '',
-      fathersName: front?.fathersName?.latin?.value || '',
-      address: front?.address?.latin?.value || '',
-      sex: front?.sex?.latin?.value || ''
-    };
-  }
-
-  /**
-   * Extracts back-side data from a scan result.
-   */
-  private extractBackData(result: any): any {
-    const back = result['BlinkIDMultiSideRecognizer::Result']?.backViz;
-    return {
-      dateOfIssue: back?.dateOfIssue?.originalString?.latin?.value || '',
-      documentAdditionalNumber: back?.documentAdditionalNumber?.latin?.value || '',
-      dateOfExpiry: back?.dateOfExpiry?.originalString?.latin?.value || ''
-    };
-  }
-
-  /**
-   * Sends the first scan result to KoboCollect by extracting relevant fields
-   * (DOB, address, images, etc.), plus any dependents info.
-   */
-  private async sendDataToKoboCollect(result: any): Promise<void> {
+  private async sendDataToKoboCollect(result: ScanResult): Promise<void> {
     try {
-      // Instead of looking for nested keys, use the result directly
-      const frontData = result; // result already contains the front-side data
-      const backImage = result.backImage || '';
-      const dependentsInfo = JSON.stringify(result.dependentsInfo || []);
-  
+      const frontData = result.frontData;
+      const backData = result.backData;
+      const dependentsInfo =
+        typeof result.dependentsInfo === 'string'
+          ? result.dependentsInfo
+          : JSON.stringify(result.dependentsInfo || []);
+      
+      // Call the SendData plugin with all required fields.
       await this.retry(
         () =>
           SendData.sendData({
-            dateOfBirth: frontData.dateOfBirth || '',
-            CoAAddress: frontData.address || '',
-            province: frontData.province || '', // Use processed values if available
-            district: frontData.district || '',
-            village: frontData.village || '',
-            documentNumber: frontData.documentNumber || '',
-            fullName: frontData.fullName || '',
-            fathersName: frontData.fathersName || '',
+            dateOfBirth: frontData.dateOfBirth,
+            CoAAddress: frontData.address,
+            province: frontData.province,
+            district: frontData.district,
+            village: frontData.village,
+            documentNumber: frontData.documentNumber,
+            fullName: frontData.fullName,
+            fathersName: frontData.fathersName,
             age: this.calculateAge(frontData.dateOfBirth || '01.01.1970'),
-            gender: frontData.sex || '',
-            frontImage: frontData.frontImage || '',
-            backImage: backImage,
-            dependentsInfo: dependentsInfo
+            gender: frontData.sex,
+            frontImage: result.frontImage,
+            backImage: result.backImage,
+            dependentsInfo: dependentsInfo,
+            // New backData fields:
+            dateOfIssue: backData.dateOfIssue,
+            documentAdditionalNumber: backData.documentAdditionalNumber,
+            dateOfExpiry: backData.dateOfExpiry
           }),
         3,
         500
@@ -209,10 +173,12 @@ export class AppComponent implements OnInit {
       console.error('Failed to send data:', error);
       this.errorMessage = this.getErrorMessage(error);
     }
-  }  
+  }
 
   /**
-   * Calculates age from a date string in format DD.MM.YYYY.
+   * Calculates age given a birth date string in format DD.MM.YYYY.
+   * @param dateOfBirth Birth date as string.
+   * @returns Calculated age as a number.
    */
   private calculateAge(dateOfBirth: string): number {
     const [day, month, year] = dateOfBirth.split('.').map(Number);
@@ -222,14 +188,20 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Converts an error to a user-friendly message string.
+   * Converts an error object into a user-friendly message.
+   * @param error The error encountered.
+   * @returns Error message string.
    */
   private getErrorMessage(error: unknown): string {
     return error instanceof Error ? error.message : String(error);
   }
 
   /**
-   * Generic retry function for async operations.
+   * Generic retry helper for async functions.
+   * @param fn Function to retry.
+   * @param retries Number of attempts.
+   * @param delay Delay between attempts in milliseconds.
+   * @returns The resolved value of the function.
    */
   private async retry<T>(fn: () => Promise<T>, retries = 3, delay = 500): Promise<T> {
     for (let attempt = 0; attempt < retries; attempt++) {
@@ -237,7 +209,7 @@ export class AppComponent implements OnInit {
         return await fn();
       } catch (error) {
         if (attempt === retries - 1) throw error;
-        await new Promise((res) => setTimeout(res, delay));
+        await new Promise(res => setTimeout(res, delay));
       }
     }
     throw new Error('Retry attempts exceeded');

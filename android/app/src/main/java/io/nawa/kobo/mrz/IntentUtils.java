@@ -14,10 +14,29 @@ public class IntentUtils {
      * Adds extras to the intent.
      *
      * Logs each extra being added and also parses dependentsInfo to add dependent extras.
+     *
+     * @param intent The intent to which extras are added.
+     * @param dateOfBirth Standard front-side field.
+     * @param CoAAddress  Standard front-side field.
+     * @param province    Standard front-side field.
+     * @param district    Standard front-side field.
+     * @param village     Standard front-side field.
+     * @param documentNumber Standard front-side field.
+     * @param fullName    Standard front-side field.
+     * @param fathersName Standard front-side field.
+     * @param age         Standard front-side field.
+     * @param gender      Standard front-side field.
+     * @param frontImageUri Front image URI.
+     * @param backImageUri  Back image URI.
+     * @param dependentsInfo Dependent information.
+     * @param dateOfIssue New back-side field.
+     * @param documentAdditionalNumber New back-side field.
+     * @param dateOfExpiry New back-side field.
      */
     public static void addExtras(Intent intent, String dateOfBirth, String CoAAddress, String province, String district,
                                  String village, String documentNumber, String fullName, String fathersName, int age,
-                                 String gender, Uri frontImageUri, Uri backImageUri, String dependentsInfo) {
+                                 String gender, Uri frontImageUri, Uri backImageUri, String dependentsInfo,
+                                 String dateOfIssue, String documentAdditionalNumber, String dateOfExpiry) {
         Log.d(TAG, "Adding extras to intent with parameters: " +
                 "dateOfBirth=" + dateOfBirth +
                 ", CoAAddress=" + CoAAddress +
@@ -31,7 +50,10 @@ public class IntentUtils {
                 ", gender=" + gender +
                 ", frontImageUri=" + frontImageUri +
                 ", backImageUri=" + backImageUri +
-                ", dependentsInfo=" + dependentsInfo);
+                ", dependentsInfo=" + dependentsInfo +
+                ", dateOfIssue=" + dateOfIssue +
+                ", documentAdditionalNumber=" + documentAdditionalNumber +
+                ", dateOfExpiry=" + dateOfExpiry);
 
         intent.putExtra("dateOfBirth", dateOfBirth);
         intent.putExtra("CoAAddress", CoAAddress);
@@ -60,6 +82,11 @@ public class IntentUtils {
             intent.putExtra("backImageUri", backImageUri.toString());
         }
         intent.putExtra("dependentsInfo", dependentsInfo);
+
+        // Add new backData extras.
+        intent.putExtra("dateOfIssue", dateOfIssue);
+        intent.putExtra("documentAdditionalNumber", documentAdditionalNumber);
+        intent.putExtra("dateOfExpiry", dateOfExpiry);
 
         // Parse dependentsInfo and add each dependent's fields with automatic labels.
         if (dependentsInfo != null && !dependentsInfo.isEmpty()) {
@@ -161,6 +188,11 @@ public class IntentUtils {
         }
         String dependentsInfo = intent.getStringExtra("dependentsInfo");
 
+        // Extract new backData fields.
+        String dateOfIssue = intent.getStringExtra("dateOfIssue");
+        String documentAdditionalNumber = intent.getStringExtra("documentAdditionalNumber");
+        String dateOfExpiry = intent.getStringExtra("dateOfExpiry");
+
         Log.d(TAG, "Extracted extras: dateOfBirth=" + dateOfBirth +
                 ", CoAAddress=" + CoAAddress +
                 ", province=" + province +
@@ -173,10 +205,14 @@ public class IntentUtils {
                 ", gender=" + gender +
                 ", frontImageUri=" + frontImageUri +
                 ", backImageUri=" + backImageUri +
-                ", dependentsInfo=" + dependentsInfo);
+                ", dependentsInfo=" + dependentsInfo +
+                ", dateOfIssue=" + dateOfIssue +
+                ", documentAdditionalNumber=" + documentAdditionalNumber +
+                ", dateOfExpiry=" + dateOfExpiry);
 
         return new Data(dateOfBirth, CoAAddress, province, district, village,
-                        documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri, dependentsInfo);
+                        documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri, dependentsInfo,
+                        dateOfIssue, documentAdditionalNumber, dateOfExpiry);
     }
 
     /**
@@ -196,10 +232,14 @@ public class IntentUtils {
         public final Uri frontImageUri;
         public final Uri backImageUri;
         public final String dependentsInfo;
+        public final String dateOfIssue;
+        public final String documentAdditionalNumber;
+        public final String dateOfExpiry;
 
         public Data(String dateOfBirth, String CoAAddress, String province, String district, String village,
                     String documentNumber, String fullName, String fathersName, int age, String gender,
-                    Uri frontImageUri, Uri backImageUri, String dependentsInfo) {
+                    Uri frontImageUri, Uri backImageUri, String dependentsInfo,
+                    String dateOfIssue, String documentAdditionalNumber, String dateOfExpiry) {
             this.dateOfBirth = dateOfBirth;
             this.CoAAddress = CoAAddress;
             this.province = province;
@@ -213,6 +253,9 @@ public class IntentUtils {
             this.frontImageUri = frontImageUri;
             this.backImageUri = backImageUri;
             this.dependentsInfo = dependentsInfo;
+            this.dateOfIssue = dateOfIssue;
+            this.documentAdditionalNumber = documentAdditionalNumber;
+            this.dateOfExpiry = dateOfExpiry;
         }
     }
 }

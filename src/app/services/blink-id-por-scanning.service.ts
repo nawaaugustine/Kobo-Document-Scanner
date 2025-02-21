@@ -1,8 +1,31 @@
-// blink-id-por-scanning.service.ts - Usage: Service for handling the scanning of documents using the BlinkID plugin.
-
 import { Injectable } from '@angular/core';
 import * as BlinkID from '@microblink/blinkid-capacitor';
 import { environment } from '../../environments/environment';
+
+/**
+ * Structured scan result interface.
+ */
+export interface ScanResult {
+  frontData: {
+    fullName: string;
+    dateOfBirth: string;
+    documentNumber: string;
+    fathersName: string;
+    address: string;
+    province: string;
+    district: string;
+    village: string;
+    sex: string;
+  };
+  backData: {
+    dateOfIssue: string;
+    documentAdditionalNumber: string;
+    dateOfExpiry: string;
+  };
+  frontImage: string;
+  backImage: string;
+  dependentsInfo: any; // could be an array or a JSON string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +46,7 @@ export class BlinkIdScanningService {
   }
 
   /**
-   * Sets recognizer options for capturing images, such as returning full document images and face images.
+   * Configures the recognizer settings to capture full document and face images.
    */
   private initializeRecognizer(): void {
     this.blinkIdMultisideRecognizer.returnFullDocumentImage = true;
@@ -31,23 +54,22 @@ export class BlinkIdScanningService {
   }
 
   /**
-   * Performs the multi-side document scan using the device's camera and handles the scanning process.
-   * @param retries - Number of times to retry the scan in case of failure.
-   * @returns Promise containing the processed scanning results or an empty array if no valid results were found.
+   * Initiates a multi-side document scan using retry logic.
+   * @param retries Number of retry attempts.
+   * @returns Array of processed ScanResult objects.
    */
-  async scanDocumentMultiSide(retries: number = 3): Promise<any[]> {
+  async scanDocumentMultiSide(retries: number = 3): Promise<ScanResult[]> {
     let attempt = 0;
     while (attempt < retries) {
       try {
-        const startTime = performance.now();  // Start timing the scan operation
+        const startTime = performance.now();
         const scanningResults = await this.plugin.scanWithCamera(
           this.settings,
           new BlinkID.RecognizerCollection([this.blinkIdMultisideRecognizer]),
           this.licenseKeys
         );
-        const endTime = performance.now();  // End timing the scan operation
-        console.log(`Scanning completed in ${endTime - startTime} milliseconds`);
-
+        const endTime = performance.now();
+        console.log(`Scanning completed in ${endTime - startTime} ms`);
         return this.processResults(scanningResults);
       } catch (error) {
         attempt++;
@@ -61,52 +83,68 @@ export class BlinkIdScanningService {
   }
 
   /**
-   * Processes the results from the scan, filtering and transforming them into a more manageable format.
-   * @param results - The raw results array from the scanning operation.
-   * @returns Array of processed result objects.
+   * Processes the raw scanning results by mapping and filtering valid results.
+   * @param results Raw results from the scanning plugin.
+   * @returns Array of structured ScanResult objects.
    */
-  private processResults(results: any[]): any[] {
+  private processResults(results: any[]): ScanResult[] {
     if (!results || results.length === 0) {
-      console.log('No scanning results or front visualization results are empty');
+      console.log('No scanning results available');
       return [];
     }
-
-    const processedResults: any[] = [];
-    results.forEach(result => {
-      const frontVizResult = result.frontVizResult;
-      if (frontVizResult && !frontVizResult.empty) {
-        processedResults.push(this.extractResult(result, frontVizResult));
-      }
-    });
-
-    console.log('Processed Results:', JSON.stringify(processedResults, null, 2));
-    return processedResults;
+    return results
+      .map(result => this.extractResult(result))
+      .filter(res => res !== null) as ScanResult[];
   }
 
   /**
-   * Extracts relevant fields from a scan result object for further use.
-   * @param result - The overall result object from a scan.
-   * @param frontVizResult - The front visualization result object from a scan.
-   * @returns Object containing the extracted information.
+   * Extracts both front and back data from a raw scan result.
+   * @param result A raw scan result.
+   * @returns A structured ScanResult object or null if the front visualization is missing.
    */
-  private extractResult(result: any, frontVizResult: any): any {
+  private extractResult(result: any): ScanResult | null {
+    const frontVizResult = result.frontVizResult;
+    if (!frontVizResult || frontVizResult.empty) {
+      console.log('Empty front visualization result');
+      return null;
+    }
+
+    // Process additional address info to extract province, district, and village.
     const additionalAddress = frontVizResult.additionalAddressInformation?.description || "";
     const [province, district, village] = additionalAddress.split(" ") || ["", "", ""];
-    const address = result.address?.description.replace(/\n/g, ' ') || "";
 
-
-    return {
+    // Front data extraction.
+    const frontData = {
+      fullName: frontVizResult.fullName?.description || "",
       dateOfBirth: frontVizResult.dateOfBirth?.originalDateStringResult?.description || "",
       documentNumber: frontVizResult.documentNumber?.description || "",
       fathersName: result.fathersName?.description || "",
-      fullName: frontVizResult.fullName?.description || "",
-      address: address,
-      province: province,
-      district: district,
-      village: village,
-      sex: frontVizResult.sex?.description || "",
-      frontImage: result.fullDocumentFrontImage ? `data:image/jpg;base64,${result.fullDocumentFrontImage}` : "", // Front image in Base64
-      backImage: result.fullDocumentBackImage ? `data:image/jpg;base64,${result.fullDocumentBackImage}` : ""  // Back image in Base64
+      address: result.address?.description.replace(/\n/g, ' ') || "",
+      province,
+      district,
+      village,
+      sex: frontVizResult.sex?.description || ""
     };
+
+    // Back data extraction from the recognizer result (if available).
+    const backDataSource = result['BlinkIDMultiSideRecognizer::Result']?.backViz || {};
+    const backData = {
+      dateOfIssue: backDataSource.dateOfIssue?.originalString?.latin?.value || "",
+      documentAdditionalNumber: backDataSource.documentAdditionalNumber?.latin?.value || "",
+      dateOfExpiry: backDataSource.dateOfExpiry?.originalString?.latin?.value || ""
+    };
+
+    // Convert images to Base64 data URIs.
+    const frontImage = result.fullDocumentFrontImage
+      ? `data:image/jpg;base64,${result.fullDocumentFrontImage}`
+      : "";
+    const backImage = result.fullDocumentBackImage
+      ? `data:image/jpg;base64,${result.fullDocumentBackImage}`
+      : "";
+
+    // Optionally capture dependent information if provided.
+    const dependentsInfo = result.dependentsInfo || "";
+
+    return { frontData, backData, frontImage, backImage, dependentsInfo };
   }
 }
