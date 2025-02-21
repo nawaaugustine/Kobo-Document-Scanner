@@ -109,7 +109,7 @@ export class BlinkIdScanningService {
       return null;
     }
 
-    console.log('Reesult Data:', JSON.stringify(result, null, 2));
+    console.log('Result Data:', JSON.stringify(result, null, 2));
 
     // Process additional address info to extract province, district, and village.
     const additionalAddress = frontVizResult.additionalAddressInformation?.description || "";
@@ -129,13 +129,13 @@ export class BlinkIdScanningService {
     };
 
     // Back data extraction
-    const backVizResult = result.backViz;
+    const backVizResult = result.backVizResult;
     console.log('Back Viz Data:', JSON.stringify(backVizResult, null, 2));
 
     const backData = {
-      dateOfIssue: backVizResult?.dateOfIssue?.originalString?.latin?.value || "",
-      documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.latin?.value || "",
-      dateOfExpiry: backVizResult?.dateOfExpiry?.originalString?.latin?.value || ""
+      dateOfIssue: backVizResult?.dateOfIssue?.originalDateStringResult?.description || "",
+      documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.description || "",
+      dateOfExpiry: backVizResult?.dateOfExpiry?.originalDateStringResult?.description || ""
     };
 
     // Convert images to Base64 data URIs.
