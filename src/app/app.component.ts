@@ -1,4 +1,11 @@
-// app.component.ts
+/**
+ * app.component.ts
+ * Main application component that handles:
+ * - Document scanning and retry logic
+ * - Toggling theme (dark/light)
+ * - Inline modal popup using a boolean flag (isInfoOpen)
+ */
+
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,9 +13,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { InfoDialogComponent } from './info-dialog/info-dialog.component';
+
 import { BlinkIdScanningService } from './services/blink-id-por-scanning.service';
 import { ThemeService } from './services/theme.service';
 import SendData from '../plugins/send-por-data.plugin';
@@ -25,22 +31,25 @@ import SendData from '../plugins/send-por-data.plugin';
     MatToolbarModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    InfoDialogComponent
+    MatSnackBarModule
   ]
 })
 export class AppComponent implements OnInit {
   title = 'Kobo Document Scanner';
+
   scanResults: string = '';
   isLoading = false;
   errorMessage: string = '';
   isDarkTheme = false;
-  isInfoDialogOpen = false;
 
+  /**
+   * Controls visibility of the inline "Help" popup.
+   */
+  isInfoOpen = false;
+
+  // Injecting required services
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
-  private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
@@ -56,16 +65,36 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Opens the inline popup containing help info.
+   */
+  showInfo(): void {
+    this.isInfoOpen = true;
+  }
+
+  /**
+   * Closes the inline popup.
+   */
+  closeInfo(): void {
+    this.isInfoOpen = false;
+  }
+
+  /**
    * Initiates the document scanning process with retry logic.
    */
   async onScanClick(): Promise<void> {
     this.scanResults = '';
     this.errorMessage = '';
     this.isLoading = true;
+
     try {
       const startTime = performance.now();
-      const results = await this.retry(() => this.blinkIdScanningService.scanDocumentMultiSide(), 3, 500);
-      console.log(`Scanning took ${performance.now() - startTime} milliseconds`);
+      // Retry scanning up to 3 times with 500ms delay
+      const results = await this.retry(
+        () => this.blinkIdScanningService.scanDocumentMultiSide(),
+        3,
+        500
+      );
+      console.log(`Scanning took ${performance.now() - startTime} ms`);
       this.processScanResults(results);
     } catch (error) {
       console.error('Scanning error:', error);
@@ -76,8 +105,8 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Processes the scan results by formatting them and sending data to KoboCollect.
-   * @param results Array of scan results.
+   * Processes the scan results by formatting them for display
+   * and sending the first result to KoboCollect.
    */
   private processScanResults(results: any[]): void {
     if (Array.isArray(results) && results.length > 0) {
@@ -89,9 +118,36 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Extracts the front-side data from the scan result.
-   * @param result Scan result object.
-   * @returns An object containing front-side fields.
+   * Formats both front and back data from multiple scan results into a display string.
+   */
+  private formatResults(results: any[]): string {
+    return results
+      .map((result) => {
+        const frontData = this.extractFrontData(result);
+        const backData = this.extractBackData(result);
+
+        const formattedFront = `
+          Full Name: ${frontData.fullName}
+          Date of Birth: ${frontData.dateOfBirth}
+          Document Number: ${frontData.documentNumber}
+          Father's Name: ${frontData.fathersName}
+          Address: ${frontData.address}
+          Sex: ${frontData.sex}
+        `.trim();
+
+        const formattedBack = `
+          Back Date of Issue: ${backData.dateOfIssue}
+          Back Document Additional Number: ${backData.documentAdditionalNumber}
+          Back Date of Expiry: ${backData.dateOfExpiry}
+        `.trim();
+
+        return formattedFront + '\n\n' + formattedBack;
+      })
+      .join('\n\n');
+  }
+
+  /**
+   * Extracts front-side data from a scan result.
    */
   private extractFrontData(result: any): any {
     const front = result['BlinkIDMultiSideRecognizer::Result']?.frontViz;
@@ -106,9 +162,7 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Extracts the back-side data from the scan result.
-   * @param result Scan result object.
-   * @returns An object containing back-side fields.
+   * Extracts back-side data from a scan result.
    */
   private extractBackData(result: any): any {
     const back = result['BlinkIDMultiSideRecognizer::Result']?.backViz;
@@ -120,34 +174,8 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Formats both front and back data for display.
-   * @param results Array of scan results.
-   * @returns A formatted string.
-   */
-  private formatResults(results: any[]): string {
-    return results.map(result => {
-      const frontData = this.extractFrontData(result);
-      const backData = this.extractBackData(result);
-      const formattedFront = `
-      Full Name: ${frontData.fullName}
-      Date of Birth: ${frontData.dateOfBirth}
-      Document Number: ${frontData.documentNumber}
-      Father's Name: ${frontData.fathersName}
-      Address: ${frontData.address}
-      Sex: ${frontData.sex}
-      `.trim();
-      const formattedBack = `
-      Back Date of Issue: ${backData.dateOfIssue}
-      Back Document Additional Number: ${backData.documentAdditionalNumber}
-      Back Date of Expiry: ${backData.dateOfExpiry}
-      `.trim();
-      return formattedFront + "\n\n" + formattedBack;
-    }).join("\n\n");
-  }
-
-  /**
-   * Sends the scan data (front/back images and dependents info) to KoboCollect.
-   * @param result Single scan result object.
+   * Sends the first scan result to KoboCollect by extracting relevant fields
+   * (DOB, address, images, etc.), plus any dependents info.
    */
   private async sendDataToKoboCollect(result: any): Promise<void> {
     try {
@@ -155,21 +183,29 @@ export class AppComponent implements OnInit {
       const frontData = fullResult?.frontViz;
       const backImage = fullResult?.fullDocumentBackImage?.encodedImage || '';
       const dependentsInfo = JSON.stringify(fullResult?.dependentsInfo || []);
-      await this.retry(() => SendData.sendData({
-        dateOfBirth: frontData?.dateOfBirth?.originalString?.latin?.value || '',
-        CoAAddress: frontData?.address?.latin?.value || '',
-        province: '', // Extract as needed
-        district: '',
-        village: '',
-        documentNumber: frontData?.documentNumber?.latin?.value || '',
-        fullName: frontData?.fullName?.latin?.value || '',
-        fathersName: frontData?.fathersName?.latin?.value || '',
-        age: this.calculateAge(frontData?.dateOfBirth?.originalString?.latin?.value || '01.01.1970'),
-        gender: frontData?.sex?.latin?.value || '',
-        frontImage: fullResult?.fullDocumentFrontImage?.encodedImage || '',
-        backImage: backImage,
-        dependentsInfo: dependentsInfo
-      }), 3, 500);
+
+      await this.retry(
+        () =>
+          SendData.sendData({
+            dateOfBirth: frontData?.dateOfBirth?.originalString?.latin?.value || '',
+            CoAAddress: frontData?.address?.latin?.value || '',
+            province: '', // Could extract as needed
+            district: '',
+            village: '',
+            documentNumber: frontData?.documentNumber?.latin?.value || '',
+            fullName: frontData?.fullName?.latin?.value || '',
+            fathersName: frontData?.fathersName?.latin?.value || '',
+            age: this.calculateAge(
+              frontData?.dateOfBirth?.originalString?.latin?.value || '01.01.1970'
+            ),
+            gender: frontData?.sex?.latin?.value || '',
+            frontImage: fullResult?.fullDocumentFrontImage?.encodedImage || '',
+            backImage: backImage,
+            dependentsInfo: dependentsInfo
+          }),
+        3,
+        500
+      );
       console.log('Data sent to KoboCollect successfully');
     } catch (error) {
       console.error('Failed to send data:', error);
@@ -178,9 +214,7 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Calculates age from a date string (DD.MM.YYYY).
-   * @param dateOfBirth Date string.
-   * @returns Calculated age.
+   * Calculates age from a date string in format DD.MM.YYYY.
    */
   private calculateAge(dateOfBirth: string): number {
     const [day, month, year] = dateOfBirth.split('.').map(Number);
@@ -190,45 +224,14 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Extracts a user-friendly error message.
-   * @param error Error object.
-   * @returns Error message.
+   * Converts an error to a user-friendly message string.
    */
   private getErrorMessage(error: unknown): string {
     return error instanceof Error ? error.message : String(error);
   }
 
   /**
-   * Opens the information dialog.
-   */
-  showInfo(): void {
-    if (this.isInfoDialogOpen) return;
-    this.isInfoDialogOpen = true;
-    const dialogRef = this.dialog.open(InfoDialogComponent, {
-      width: '80vw',
-      maxWidth: '600px',
-      autoFocus: false,
-      disableClose: true,
-      position: { top: '0%', left: '10%', bottom: '5%' }
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      this.isInfoDialogOpen = false;
-    });
-  }
-
-  /**
-   * Displays a "Coming Soon" notification.
-   */
-  comingSoon(): void {
-    this.snackBar.open('Coming Soon', 'Close', { duration: 2000 });
-  }
-
-  /**
-   * Generic retry function for asynchronous operations.
-   * @param fn Asynchronous function to retry.
-   * @param retries Number of retry attempts.
-   * @param delay Delay between retries in milliseconds.
-   * @returns The resolved value of the asynchronous function.
+   * Generic retry function for async operations.
    */
   private async retry<T>(fn: () => Promise<T>, retries = 3, delay = 500): Promise<T> {
     for (let attempt = 0; attempt < retries; attempt++) {
@@ -236,7 +239,7 @@ export class AppComponent implements OnInit {
         return await fn();
       } catch (error) {
         if (attempt === retries - 1) throw error;
-        await new Promise(res => setTimeout(res, delay));
+        await new Promise((res) => setTimeout(res, delay));
       }
     }
     throw new Error('Retry attempts exceeded');
