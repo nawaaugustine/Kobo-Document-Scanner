@@ -25,8 +25,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "src/theme/custom-theme.scss"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -35,7 +34,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
+                  "maximumWarning": "600kb",
                   "maximumError": "1mb"
                 },
                 {
@@ -97,8 +96,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
-              "src/theme/custom-theme.scss"
+              "src/styles.scss"
             ],
             "scripts": []
           }

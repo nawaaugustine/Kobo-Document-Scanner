@@ -1,25 +1,3 @@
-// Custom Theming for Angular Material
-@import 'theme/custom-theme';
-
-// Style Switcher
-body.light-theme {
-  --primary-color: #044F85 !important;
-  --accent-color: #18375F;
-  --warn-color: #E1CC0D;
-  background-color: #ffffff;
-  color: #000000;
-}
-
-body.dark-theme {
-  --primary-color: #044F85;
-  --accent-color: #18375F;
-  --warn-color: #E1CC0D;
-  background-color: #121212;
-  color: #ffffff;
-}
-
-:root {
-    --second-blue: #18375F;
-    --yellow: #FAEB00;
-}
-  
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

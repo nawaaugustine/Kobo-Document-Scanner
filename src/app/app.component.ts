@@ -1,3 +1,11 @@
+/**
+ * app.component.ts
+ * Main application component that handles:
+ * - Document scanning and retry logic
+ * - Toggling theme (dark/light)
+ * - Inline modal popup using a boolean flag (isInfoOpen)
+ */
+
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -5,9 +13,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { InfoDialogComponent } from './info-dialog/info-dialog.component';
+
 import { BlinkIdScanningService } from './services/blink-id-por-scanning.service';
 import { ThemeService } from './services/theme.service';
 import SendData from '../plugins/send-por-data.plugin';
@@ -18,191 +25,223 @@ import SendData from '../plugins/send-por-data.plugin';
   styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [
-    CommonModule, // Import CommonModule
+    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule, // Import MatDialogModule
-    MatSnackBarModule, // Import MatSnackBarModule
-    InfoDialogComponent // Import InfoDialogComponent as a standalone component
+    MatSnackBarModule
   ]
 })
 export class AppComponent implements OnInit {
-  title = 'Kobo Document Scanner'; // Title of the app
-  scanResults: string = ''; // Holds the scan results to be displayed
-  isLoading = false; // Indicates if the app is in a loading state
-  errorMessage: string = ''; // Holds error messages
-  isDarkTheme = false; // Indicates if the dark theme is enabled
-  isInfoDialogOpen = false; // Flag to prevent multiple dialogs
+  title = 'Kobo Document Scanner';
 
-  // Using inject() to properly inject services in a standalone component
-  private blinkIdScanningService = inject(BlinkIdScanningService); // Service for scanning documents
-  private themeService = inject(ThemeService); // Service for handling theme changes
-  private dialog = inject(MatDialog); // Inject MatDialog service
-  private snackBar = inject(MatSnackBar); // Inject MatSnackBar service
+  scanResults: string = '';
+  isLoading = false;
+  errorMessage: string = '';
+  isDarkTheme = false;
+
+  /**
+   * Controls visibility of the inline "Help" popup.
+   */
+  isInfoOpen = false;
+
+  // Injecting required services
+  private blinkIdScanningService = inject(BlinkIdScanningService);
+  private themeService = inject(ThemeService);
+  private snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
-    this.isDarkTheme = this.themeService.isDarkThemeEnabled(); // Initialize theme based on user preference
+    this.isDarkTheme = this.themeService.isDarkThemeEnabled();
   }
 
   /**
    * Toggles between dark and light themes.
    */
   toggleTheme(): void {
-    this.isDarkTheme = !this.isDarkTheme; // Toggle theme state
-    this.themeService.enableDarkTheme(this.isDarkTheme); // Apply the selected theme
+    this.isDarkTheme = !this.isDarkTheme;
+    this.themeService.enableDarkTheme(this.isDarkTheme);
   }
 
   /**
-   * Handles the click event to initiate document scanning.
+   * Opens the inline popup containing help info.
+   */
+  showInfo(): void {
+    this.isInfoOpen = true;
+  }
+
+  /**
+   * Closes the inline popup.
+   */
+  closeInfo(): void {
+    this.isInfoOpen = false;
+  }
+
+  /**
+   * Initiates the document scanning process with retry logic.
    */
   async onScanClick(): Promise<void> {
-    this.scanResults = ''; // Clear previous scan results
-    this.errorMessage = ''; // Clear previous error messages
-    this.isLoading = true; // Set loading state to true
+    this.scanResults = '';
+    this.errorMessage = '';
+    this.isLoading = true;
+
     try {
-      const startTime = performance.now(); // Start timing the scan operation
-      const results = await this.blinkIdScanningService.scanDocumentMultiSide(); // Perform the scan
-      const endTime = performance.now(); // End timing the scan operation
-      console.log(`Scanning took ${endTime - startTime} milliseconds`); // Log the duration of the scan
-      this.processScanResults(results); // Process the scan results
+      const startTime = performance.now();
+      // Retry scanning up to 3 times with 500ms delay
+      const results = await this.retry(
+        () => this.blinkIdScanningService.scanDocumentMultiSide(),
+        3,
+        500
+      );
+      console.log(`Scanning took ${performance.now() - startTime} ms`);
+      this.processScanResults(results);
     } catch (error) {
-      console.error('Scanning error:', error); // Log any errors
-      this.errorMessage = this.getErrorMessage(error); // Display a user-friendly error message
+      console.error('Scanning error:', error);
+      this.errorMessage = this.getErrorMessage(error);
     } finally {
-      this.isLoading = false; // Reset loading state
+      this.isLoading = false;
     }
   }
 
   /**
-   * Processes scan results, formats them, and initiates data sharing.
-   * @param results Array of processed scan results
+   * Processes the scan results by formatting them for display
+   * and sending the first result to KoboCollect.
    */
   private processScanResults(results: any[]): void {
     if (Array.isArray(results) && results.length > 0) {
-      this.scanResults = this.formatResults(results); // Format and display scan results
-      this.sendDataToKoboCollect(results[0]); // Send the first result to KoboCollect
+      this.scanResults = this.formatResults(results);
+      this.sendDataToKoboCollect(results[0]);
     } else {
-      this.errorMessage = 'No results or scanning was canceled'; // Display a message if no results are found
+      this.errorMessage = 'No results or scanning was canceled';
     }
   }
 
   /**
-   * Formats the scan results for display or sharing.
-   * @param results Array of processed scan results
-   * @returns Formatted string of results
+   * Formats both front and back data from multiple scan results into a display string.
    */
   private formatResults(results: any[]): string {
-    return results.map(result => {
-      const formattedResult = `
-      Full Name: ${result.fullName}
-      Date of Birth: ${result.dateOfBirth}
-      Document Number: ${result.documentNumber}
-      Father's Name: ${result.fathersName}
-      Address: ${result.address}
-      Province: ${result.province}
-      District: ${result.district}
-      Village: ${result.village}
-      Sex: ${result.sex}
-      `;
-      return formattedResult.trim(); // Format each result
-    }).join("\n\n"); // Join results with double newlines
+    return results
+      .map((result) => {
+        const frontData = this.extractFrontData(result);
+        const backData = this.extractBackData(result);
+
+        const formattedFront = `
+          Full Name: ${frontData.fullName}
+          Date of Birth: ${frontData.dateOfBirth}
+          Document Number: ${frontData.documentNumber}
+          Father's Name: ${frontData.fathersName}
+          Address: ${frontData.address}
+          Sex: ${frontData.sex}
+        `.trim();
+
+        const formattedBack = `
+          Back Date of Issue: ${backData.dateOfIssue}
+          Back Document Additional Number: ${backData.documentAdditionalNumber}
+          Back Date of Expiry: ${backData.dateOfExpiry}
+        `.trim();
+
+        return formattedFront + '\n\n' + formattedBack;
+      })
+      .join('\n\n');
   }
 
   /**
-   * Sends the scan results to the KoboCollect app using the native plugin.
-   * @param result The processed scan result
+   * Extracts front-side data from a scan result.
+   */
+  private extractFrontData(result: any): any {
+    const front = result['BlinkIDMultiSideRecognizer::Result']?.frontViz;
+    return {
+      fullName: front?.fullName?.latin?.value || '',
+      dateOfBirth: front?.dateOfBirth?.originalString?.latin?.value || '',
+      documentNumber: front?.documentNumber?.latin?.value || '',
+      fathersName: front?.fathersName?.latin?.value || '',
+      address: front?.address?.latin?.value || '',
+      sex: front?.sex?.latin?.value || ''
+    };
+  }
+
+  /**
+   * Extracts back-side data from a scan result.
+   */
+  private extractBackData(result: any): any {
+    const back = result['BlinkIDMultiSideRecognizer::Result']?.backViz;
+    return {
+      dateOfIssue: back?.dateOfIssue?.originalString?.latin?.value || '',
+      documentAdditionalNumber: back?.documentAdditionalNumber?.latin?.value || '',
+      dateOfExpiry: back?.dateOfExpiry?.originalString?.latin?.value || ''
+    };
+  }
+
+  /**
+   * Sends the first scan result to KoboCollect by extracting relevant fields
+   * (DOB, address, images, etc.), plus any dependents info.
    */
   private async sendDataToKoboCollect(result: any): Promise<void> {
     try {
-      await SendData.sendData({
-        dateOfBirth: result.dateOfBirth,
-        CoAAddress: result.address,
-        province: result.province,
-        district: result.district,
-        village: result.village,
-        
-        documentNumber: result.documentNumber,
-        fullName: result.fullName,
-        fathersName: result.fathersName,
-        age: this.calculateAge(result.dateOfBirth), // Calculate age from date of birth
-        gender: result.sex,
-        frontImage: result.frontImage,
-        backImage: result.backImage
-      });
-      console.log('Data sent to KoboCollect successfully'); // Log successful data transfer
+      const fullResult = result['BlinkIDMultiSideRecognizer::Result'];
+      const frontData = fullResult?.frontViz;
+      const backImage = fullResult?.fullDocumentBackImage?.encodedImage || '';
+      const dependentsInfo = JSON.stringify(fullResult?.dependentsInfo || []);
+
+      await this.retry(
+        () =>
+          SendData.sendData({
+            dateOfBirth: frontData?.dateOfBirth?.originalString?.latin?.value || '',
+            CoAAddress: frontData?.address?.latin?.value || '',
+            province: '', // Could extract as needed
+            district: '',
+            village: '',
+            documentNumber: frontData?.documentNumber?.latin?.value || '',
+            fullName: frontData?.fullName?.latin?.value || '',
+            fathersName: frontData?.fathersName?.latin?.value || '',
+            age: this.calculateAge(
+              frontData?.dateOfBirth?.originalString?.latin?.value || '01.01.1970'
+            ),
+            gender: frontData?.sex?.latin?.value || '',
+            frontImage: fullResult?.fullDocumentFrontImage?.encodedImage || '',
+            backImage: backImage,
+            dependentsInfo: dependentsInfo
+          }),
+        3,
+        500
+      );
+      console.log('Data sent to KoboCollect successfully');
     } catch (error) {
-      console.error('Failed to send data:', error); // Log any errors during data transfer
-      this.errorMessage = this.getErrorMessage(error); // Display a user-friendly error message
+      console.error('Failed to send data:', error);
+      this.errorMessage = this.getErrorMessage(error);
     }
   }
 
   /**
-   * Calculates age from the date of birth.
-   * @param dateOfBirth The date of birth in DD.MM.YYYY format
-   * @returns The calculated age
+   * Calculates age from a date string in format DD.MM.YYYY.
    */
   private calculateAge(dateOfBirth: string): number {
-    const [day, month, year] = dateOfBirth.split('.').map(Number); // Split and convert date parts to numbers
-    const birthDate = new Date(year, month - 1, day); // Create a Date object
-    const ageDifMs = Date.now() - birthDate.getTime(); // Calculate the difference in milliseconds
-    const ageDate = new Date(ageDifMs); // Create a Date object from the difference
-    return Math.abs(ageDate.getUTCFullYear() - 1970); // Calculate and return the age
+    const [day, month, year] = dateOfBirth.split('.').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const ageDifMs = Date.now() - birthDate.getTime();
+    return Math.abs(new Date(ageDifMs).getUTCFullYear() - 1970);
   }
 
   /**
-   * Extracts and returns a user-friendly error message from an error of type unknown.
-   * @param error The error to extract the message from.
-   * @returns The extracted error message.
+   * Converts an error to a user-friendly message string.
    */
   private getErrorMessage(error: unknown): string {
-    if (error instanceof Error) {
-      return error.message; // Return the error message if it's an Error object
-    }
-    return String(error); // Convert and return the error as a string
+    return error instanceof Error ? error.message : String(error);
   }
 
   /**
-   * Opens the information dialog when the info button is clicked.
+   * Generic retry function for async operations.
    */
-  showInfo(): void {
-    if (this.isInfoDialogOpen) {
-      return; // Prevent opening multiple dialogs
-    }
-  
-    this.isInfoDialogOpen = true;
-    console.log('showInfo called');
-    const dialogRef = this.dialog.open(InfoDialogComponent, {
-      width: '80vw', // Adjust the width as necessary
-      maxWidth: '600px', // Adjust the max-width as necessary
-      autoFocus: false, // Prevent autofocus issues
-      disableClose: true, // Prevent closing on backdrop click
-      position: {
-        top: '0%', // Adjust the top position as necessary
-        left: '10%',
-        bottom: '5%'
+  private async retry<T>(fn: () => Promise<T>, retries = 3, delay = 500): Promise<T> {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        return await fn();
+      } catch (error) {
+        if (attempt === retries - 1) throw error;
+        await new Promise((res) => setTimeout(res, delay));
       }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed');
-      this.isInfoDialogOpen = false; // Reset the flag when dialog is closed
-      console.log(result);
-    });
-  
-    dialogRef.afterOpened().subscribe(() => {
-      console.log('Dialog opened');
-    });
-  }
-
-  /**
-   * Displays a "Coming Soon" notification.
-   */
-  comingSoon(): void {
-    this.snackBar.open('Coming Soon', 'Close', {
-      duration: 2000, // Notification duration in milliseconds
-    });
+    }
+    throw new Error('Retry attempts exceeded');
   }
 }
