@@ -1,55 +1,176 @@
-<div class="container">
-  <!-- Application Toolbar with Theme Toggle Button -->
-  <mat-toolbar color="primary" class="toolbar">
-    <div class="toolbar-title">
-      <span>{{ title }}</span>
-      <span class="subtitle">Developed by RBAP DIMA</span> <!-- Add subtitle here -->
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-blue-700 via-blue-500 to-blue-300 text-white font-sans">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-4 shadow-lg bg-white/15 backdrop-blur-md">
+    <div class="flex items-center">
+      <h1 class="text-2xl font-bold tracking-tight">
+        Kobo Document Scanner 
+        <span class="ml-2 text-sm font-normal bg-white/20 px-2 py-1 rounded-full">v1.0.15</span>
+      </h1>
     </div>
-    <span class="spacer"></span>
-    <button mat-icon-button (click)="toggleTheme()">
-      <mat-icon>{{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}</mat-icon>
-    </button>
-  </mat-toolbar>
-
-  <!-- Main Content Area -->
-  <div class="content">
-    <h1>Supported Document</h1>
-    <div class="button-container">
-      <button mat-raised-button color="primary" (click)="onScanClick()" [disabled]="isLoading">
-        <mat-icon>document_scanner</mat-icon>
-        Scan POR Card
+    <div class="flex items-center space-x-3">
+      <!-- Theme Toggle Button -->
+      <button
+        mat-icon-button
+        (click)="toggleTheme()"
+        aria-label="Toggle Theme"
+        class="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/20 transition-all duration-200 active:scale-95"
+      >
+        <mat-icon class="flex items-center justify-center h-6 w-6">
+          {{ isDarkTheme ? 'brightness_7' : 'brightness_4' }}
+        </mat-icon>
       </button>
-      <button mat-raised-button color="accent" (click)="comingSoon()">
-        <mat-icon>document_scanner</mat-icon>
-        Scan ACC Card
+      <!-- Help Button -->
+      <button
+        mat-button
+        (click)="showInfo()"
+        aria-label="Show Info"
+        class="focus:outline-none flex items-center justify-center px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 active:scale-95"
+      >
+        <mat-icon class="flex items-center justify-center h-6 w-6 mr-1">help_outline</mat-icon>
+        <span>Help</span>
       </button>
-      <button mat-raised-button color="accent" (click)="comingSoon()">
-        <mat-icon>document_scanner</mat-icon>
-        Scan Tazkira
-      </button>
     </div>
+  </header>
 
-    <!-- Loading Spinner -->
-    <div class="loading-spinner" *ngIf="isLoading">
-      <mat-spinner></mat-spinner>
-    </div>
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+    <div class="w-full max-w-2xl bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl p-8 transition-all duration-300">
+      <h2 class="text-2xl font-bold mb-8 text-center">Select Document Type</h2>
+      
+      <div class="grid gap-6">
+        <!-- Document Type Buttons - Left Aligned -->
+        
+        <!-- POR Card -->
+        <div class="rounded-xl overflow-hidden transition-all duration-300">
+          <button
+            mat-raised-button
+            (click)="onScanClick()"
+            [disabled]="isLoading"
+            class="w-full h-20 relative bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl text-left group hover:opacity-90 hover:border-2 hover:border-white disabled:opacity-75"
+          >
+            <div class="flex items-center h-full pl-6 pr-6">
+              <!-- Icon -->
+              <div class="flex items-center justify-center h-10 w-10 flex-shrink-0">
+                <mat-icon class="flex items-center justify-center h-8 w-8">document_scanner</mat-icon>
+              </div>
 
-    <!-- Scan Results -->
-    <div *ngIf="scanResults" class="results">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Scan Results</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <pre>{{ scanResults }}</pre>
-        </mat-card-content>
-      </mat-card>
+              <!-- Text content -->
+              <div class="ml-4">
+                <span class="block font-bold text-xl leading-tight">POR Card</span>
+                <span class="text-sm opacity-80 leading-tight">Proof of Registration</span>
+              </div>
+
+              <!-- Arrow icon: Only revealed on hover for active (non-disabled) buttons -->
+              <div class="ml-auto transition-all duration-200 opacity-0 group-hover:opacity-100">
+                <mat-icon>arrow_forward</mat-icon>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- ACC Card -->
+        <div class="rounded-xl overflow-hidden transition-all duration-300 opacity-75">
+          <button
+            mat-raised-button
+            class="w-full h-20 relative bg-gradient-to-r from-yellow-600 to-yellow-500 text-white rounded-xl cursor-not-allowed text-left"
+            disabled
+          >
+            <div class="flex items-center h-full pl-6 pr-6">
+              <!-- Icon -->
+              <div class="flex items-center justify-center h-10 w-10 flex-shrink-0">
+                <mat-icon class="flex items-center justify-center h-8 w-8">document_scanner</mat-icon>
+              </div>
+              
+              <!-- Text content -->
+              <div class="ml-4">
+                <span class="block font-bold text-xl leading-tight">ACC Card</span>
+                <span class="text-sm opacity-80 leading-tight">Coming soon</span>
+              </div>
+              
+              <!-- Status badge -->
+              <div class="ml-auto">
+                <div class="bg-white/20 px-3 py-1 rounded-full text-xs uppercase font-bold">Disabled</div>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Tazkira Card -->
+        <div class="rounded-xl overflow-hidden transition-all duration-300 opacity-75">
+          <button
+            mat-raised-button
+            class="w-full h-20 relative bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-xl cursor-not-allowed text-left"
+            disabled
+          >
+            <div class="flex items-center h-full pl-6 pr-6">
+              <!-- Icon -->
+              <div class="flex items-center justify-center h-10 w-10 flex-shrink-0">
+                <mat-icon class="flex items-center justify-center h-8 w-8">document_scanner</mat-icon>
+              </div>
+              
+              <!-- Text content -->
+              <div class="ml-4">
+                <span class="block font-bold text-xl leading-tight">Tazkira</span>
+                <span class="text-sm opacity-80 leading-tight">Coming soon</span>
+              </div>
+              
+              <!-- Status badge -->
+              <div class="ml-auto">
+                <div class="bg-white/20 px-3 py-1 rounded-full text-xs uppercase font-bold">Disabled</div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scan Results -->
+      <div *ngIf="scanResults" class="mt-8 animate-fade-in">
+        <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 shadow-inner">
+          <div class="flex items-center mb-4">
+            <div class="flex items-center justify-center h-6 w-6 text-green-600 mr-2">
+              <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold">Scan Results</h3>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <pre class="whitespace-pre-wrap text-sm font-mono">{{ scanResults }}</pre>
+          </div>
+          <!-- Results Actions -->
+          <div class="flex justify-end mt-4 space-x-3">
+            <button mat-button class="text-sm flex items-center text-gray-600 dark:text-gray-300 px-2 py-1">
+              <div class="flex items-center justify-center h-5 w-5 mr-1">
+                <mat-icon class="text-base">content_copy</mat-icon>
+              </div>
+              <span>Copy</span>
+            </button>
+            <button mat-button class="text-sm flex items-center text-gray-600 dark:text-gray-300 px-2 py-1">
+              <div class="flex items-center justify-center h-5 w-5 mr-1">
+                <mat-icon class="text-base">save_alt</mat-icon>
+              </div>
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </main>
+
+  <!-- Status Bar -->
+  <footer class="py-2 px-6 bg-black/10 backdrop-blur-sm text-sm flex justify-between items-center">
+    <div>Status: <span class="font-medium">Ready</span></div>
+    <div>Connected to Kobo Server</div>
+  </footer>
+
+  <!-- Loading Overlay -->
+  <div
+    *ngIf="isLoading"
+    class="fixed inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-50"
+  >
+    <div class="h-12 w-12">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+    <p class="mt-4 text-white font-medium">Processing document...</p>
   </div>
-
-  <!-- Floating Information Button -->
-  <button mat-fab color="accent" class="info-button" (click)="showInfo()">
-    <mat-icon>help</mat-icon>
-  </button>
-
 </div>
