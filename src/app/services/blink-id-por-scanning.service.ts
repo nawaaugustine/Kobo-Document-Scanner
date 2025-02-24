@@ -104,10 +104,10 @@ export class BlinkIdScanningService {
    */
   private extractResult(result: any): ScanResult | null {
     const frontVizResult = result.frontVizResult;
-    if (!frontVizResult || frontVizResult.empty) {
-      console.log('Empty front visualization result');
-      return null;
-    }
+    //if (!frontVizResult || frontVizResult.empty) {
+    //  console.log('Empty front visualization result');
+    //  return null;
+   // }
 
     console.log('Result Data:', JSON.stringify(result, null, 2));
 

@@ -1,0 +1,1229 @@
+{
+    "BlinkIDMultiSideRecognizer::Result" : {
+      "signatureImage" : {
+        "rawImage" : null,
+        "encodedImage" : ""
+      },
+      "backImageAnalysisResult" : {
+        "documentImageMoireStatus" : 0,
+        "cardOrientation" : 0,
+        "documentImageColorStatus" : 2,
+        "cardRotation" : 2,
+        "realIDDetectionStatus" : 0,
+        "blurDetected" : false,
+        "mrzDetectionStatus" : 1,
+        "glareDetected" : false,
+        "faceDetectionStatus" : 1,
+        "barcodeDetectionStatus" : 2
+      },
+      "frontViz" : {
+        "fathersName" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "Muhammad Zahid",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 234.6944580078125,
+                "y" : 228.7183837890625
+              },
+              "size" : {
+                "width" : 206.76901245117188,
+                "height" : 24.052032470703125
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "address" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "Panian, Camp No 15, Panian\nHaripur Haripur Khyber-pakhtunkiiwa",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 235.28207397460938,
+                "y" : 347.88433837890625
+              },
+              "size" : {
+                "width" : 377.36978149414062,
+                "height" : 49.936553955078125
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "driverLicenseDetailedInfo" : {
+          "vehicleClassesInfo" : [
+  
+          ]
+        },
+        "dependentsInfo" : [
+  
+        ],
+        "documentNumber" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "CM11692491221",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 326.96343994140625,
+                "y" : 120.90177154541016
+              },
+              "size" : {
+                "width" : 190.5537109375,
+                "height" : 23.297859191894531
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "dateOfBirth" : {
+          "successfullyParsed" : true,
+          "filledByDomainKnowledge" : false,
+          "originalString" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "01.01.1999",
+              "side" : 0,
+              "location" : {
+                "origin" : {
+                  "x" : 386.72201538085938,
+                  "y" : 286.1846923828125
+                },
+                "size" : {
+                  "width" : 109.49526977539062,
+                  "height" : 21.4765625
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "day" : 1,
+          "month" : 1,
+          "year" : 1999
+        },
+        "fullName" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "Basher Bibi",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 233.87240600585938,
+                "y" : 173.35548400878906
+              },
+              "size" : {
+                "width" : 127.32077026367188,
+                "height" : 24.418472290039062
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "sex" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "Female",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 234.6646728515625,
+                "y" : 285.20419311523438
+              },
+              "size" : {
+                "width" : 71.79241943359375,
+                "height" : 20.488861083984375
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "additionalAddressInformation" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "Balkh Nahr-e- Shahi Shahrak Kohna",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 236.06346130371094,
+                "y" : 472.66049194335938
+              },
+              "size" : {
+                "width" : 484.10888671875,
+                "height" : 26.0340576171875
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "dateOfExpiryPermanent" : false
+      },
+      "documentNumber" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "CM11692491221",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 326.96343994140625,
+              "y" : 120.90177154541016
+            },
+            "size" : {
+              "width" : 190.5537109375,
+              "height" : 23.297859191894531
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "dateOfIssue" : {
+        "successfullyParsed" : true,
+        "filledByDomainKnowledge" : false,
+        "originalString" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "01.07.2021",
+            "side" : 1,
+            "location" : {
+              "origin" : {
+                "x" : 373.23577880859375,
+                "y" : 63.114952087402344
+              },
+              "size" : {
+                "width" : 108.84341430664062,
+                "height" : 21.038139343261719
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "day" : 1,
+        "month" : 7,
+        "year" : 2021
+      },
+      "address" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "Panian, Camp No 15, Panian\nHaripur Haripur Khyber-pakhtunkiiwa",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 235.28207397460938,
+              "y" : 347.88433837890625
+            },
+            "size" : {
+              "width" : 377.36978149414062,
+              "height" : 49.936553955078125
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "faceImageSide" : 0,
+      "dateOfExpiry" : {
+        "successfullyParsed" : true,
+        "filledByDomainKnowledge" : false,
+        "originalString" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "30.06.2023",
+            "side" : 1,
+            "location" : {
+              "origin" : {
+                "x" : 660.36309814453125,
+                "y" : 62.998184204101562
+              },
+              "size" : {
+                "width" : 109.4818115234375,
+                "height" : 20.914077758789062
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "day" : 30,
+        "month" : 6,
+        "year" : 2023
+      },
+      "frontImageAnalysisResult" : {
+        "documentImageMoireStatus" : 0,
+        "cardOrientation" : 0,
+        "documentImageColorStatus" : 2,
+        "cardRotation" : 2,
+        "realIDDetectionStatus" : 0,
+        "blurDetected" : false,
+        "mrzDetectionStatus" : 1,
+        "glareDetected" : false,
+        "faceDetectionStatus" : 2,
+        "barcodeDetectionStatus" : 1
+      },
+      "fathersName" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "Muhammad Zahid",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 234.6944580078125,
+              "y" : 228.7183837890625
+            },
+            "size" : {
+              "width" : 206.76901245117188,
+              "height" : 24.052032470703125
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "faceImageLocation" : {
+        "origin" : {
+          "x" : 612,
+          "y" : 94
+        },
+        "size" : {
+          "width" : 187,
+          "height" : 276
+        }
+      },
+      "faceImage" : {
+        "rawImage" : null,
+        "encodedImage" : ""
+      },
+      "backViz" : {
+        "dateOfExpiryPermanent" : false,
+        "dateOfIssue" : {
+          "successfullyParsed" : true,
+          "filledByDomainKnowledge" : false,
+          "originalString" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "01.07.2021",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 373.23577880859375,
+                  "y" : 63.114952087402344
+                },
+                "size" : {
+                  "width" : 108.84341430664062,
+                  "height" : 21.038139343261719
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "day" : 1,
+          "month" : 7,
+          "year" : 2021
+        },
+        "documentAdditionalNumber" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "VZL240814",
+            "side" : 1,
+            "location" : {
+              "origin" : {
+                "x" : 175.65220642089844,
+                "y" : 60.925430297851562
+              },
+              "size" : {
+                "width" : 110.75184631347656,
+                "height" : 20.946357727050781
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "driverLicenseDetailedInfo" : {
+          "vehicleClassesInfo" : [
+  
+          ]
+        },
+        "dependentsInfo" : [
+          {
+            "dateOfBirth" : {
+              "successfullyParsed" : true,
+              "filledByDomainKnowledge" : false,
+              "originalString" : {
+                "arabic" : {
+                  "value" : ""
+                },
+                "latin" : {
+                  "value" : "14.02.2024",
+                  "side" : 1,
+                  "location" : {
+                    "origin" : {
+                      "x" : 659.095703125,
+                      "y" : 205.63926696777344
+                    },
+                    "size" : {
+                      "width" : 109.92657470703125,
+                      "height" : 54.959457397460938
+                    }
+                  }
+                },
+                "cyrillic" : {
+                  "value" : ""
+                },
+                "greek" : {
+                  "value" : ""
+                }
+              },
+              "day" : 14,
+              "month" : 2,
+              "year" : 2024
+            },
+            "sex" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "F",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 591.19000244140625,
+                    "y" : 206.559326171875
+                  },
+                  "size" : {
+                    "width" : 19.51177978515625,
+                    "height" : 54.173126220703125
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "documentNumber" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "NBR1001442827",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 394.18215942382812,
+                    "y" : 206.60585021972656
+                  },
+                  "size" : {
+                    "width" : 161.09933471679688,
+                    "height" : 54.792648315429688
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "fullName" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "Ranra Bibi",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 159.12203979492188,
+                    "y" : 204.121337890625
+                  },
+                  "size" : {
+                    "width" : 124.97677612304688,
+                    "height" : 61.510406494140625
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            }
+          },
+          {
+            "dateOfBirth" : {
+              "successfullyParsed" : true,
+              "filledByDomainKnowledge" : false,
+              "originalString" : {
+                "arabic" : {
+                  "value" : ""
+                },
+                "latin" : {
+                  "value" : "14.10.2021",
+                  "side" : 1,
+                  "location" : {
+                    "origin" : {
+                      "x" : 659.095703125,
+                      "y" : 205.63926696777344
+                    },
+                    "size" : {
+                      "width" : 109.92657470703125,
+                      "height" : 54.959457397460938
+                    }
+                  }
+                },
+                "cyrillic" : {
+                  "value" : ""
+                },
+                "greek" : {
+                  "value" : ""
+                }
+              },
+              "day" : 14,
+              "month" : 10,
+              "year" : 2021
+            },
+            "sex" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "M",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 591.19000244140625,
+                    "y" : 206.559326171875
+                  },
+                  "size" : {
+                    "width" : 19.51177978515625,
+                    "height" : 54.173126220703125
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "documentNumber" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "NBR1001442828",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 394.18215942382812,
+                    "y" : 206.60585021972656
+                  },
+                  "size" : {
+                    "width" : 161.09933471679688,
+                    "height" : 54.792648315429688
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "fullName" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "Ibrar Ur Haq",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 159.12203979492188,
+                    "y" : 204.121337890625
+                  },
+                  "size" : {
+                    "width" : 124.97677612304688,
+                    "height" : 61.510406494140625
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            }
+          }
+        ],
+        "dateOfExpiry" : {
+          "successfullyParsed" : true,
+          "filledByDomainKnowledge" : false,
+          "originalString" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "30.06.2023",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 660.36309814453125,
+                  "y" : 62.998184204101562
+                },
+                "size" : {
+                  "width" : 109.4818115234375,
+                  "height" : 20.914077758789062
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "day" : 30,
+          "month" : 6,
+          "year" : 2023
+        }
+      },
+      "dataMatch" : {
+        "state" : 0,
+        "fields" : {
+          "dateOfBirth" : 0,
+          "documentAdditionalNumber" : 0,
+          "documentOptionalAdditionalNumber" : 0,
+          "documentNumber" : 0,
+          "personalIdNumber" : 0,
+          "dateOfExpiry" : 0
+        }
+      },
+      "fullDocumentBackImage" : {
+        "rawImage" : null,
+        "encodedImage" : ""
+      },
+      "sex" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "Female",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 234.6646728515625,
+              "y" : 285.20419311523438
+            },
+            "size" : {
+              "width" : 71.79241943359375,
+              "height" : 20.488861083984375
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "dependentsInfo" : [
+        {
+          "dateOfBirth" : {
+            "successfullyParsed" : true,
+            "filledByDomainKnowledge" : false,
+            "originalString" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "14.02.2024",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 659.095703125,
+                    "y" : 205.63926696777344
+                  },
+                  "size" : {
+                    "width" : 109.92657470703125,
+                    "height" : 54.959457397460938
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "day" : 14,
+            "month" : 2,
+            "year" : 2024
+          },
+          "sex" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "F",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 591.19000244140625,
+                  "y" : 206.559326171875
+                },
+                "size" : {
+                  "width" : 19.51177978515625,
+                  "height" : 54.173126220703125
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "documentNumber" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "NBR1001442827",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 394.18215942382812,
+                  "y" : 206.60585021972656
+                },
+                "size" : {
+                  "width" : 161.09933471679688,
+                  "height" : 54.792648315429688
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "fullName" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "Ranra Bibi",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 159.12203979492188,
+                  "y" : 204.121337890625
+                },
+                "size" : {
+                  "width" : 124.97677612304688,
+                  "height" : 61.510406494140625
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          }
+        },
+        {
+          "dateOfBirth" : {
+            "successfullyParsed" : true,
+            "filledByDomainKnowledge" : false,
+            "originalString" : {
+              "arabic" : {
+                "value" : ""
+              },
+              "latin" : {
+                "value" : "14.10.2021",
+                "side" : 1,
+                "location" : {
+                  "origin" : {
+                    "x" : 659.095703125,
+                    "y" : 205.63926696777344
+                  },
+                  "size" : {
+                    "width" : 109.92657470703125,
+                    "height" : 54.959457397460938
+                  }
+                }
+              },
+              "cyrillic" : {
+                "value" : ""
+              },
+              "greek" : {
+                "value" : ""
+              }
+            },
+            "day" : 14,
+            "month" : 10,
+            "year" : 2021
+          },
+          "sex" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "M",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 591.19000244140625,
+                  "y" : 206.559326171875
+                },
+                "size" : {
+                  "width" : 19.51177978515625,
+                  "height" : 54.173126220703125
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "documentNumber" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "NBR1001442828",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 394.18215942382812,
+                  "y" : 206.60585021972656
+                },
+                "size" : {
+                  "width" : 161.09933471679688,
+                  "height" : 54.792648315429688
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          },
+          "fullName" : {
+            "arabic" : {
+              "value" : ""
+            },
+            "latin" : {
+              "value" : "Ibrar Ur Haq",
+              "side" : 1,
+              "location" : {
+                "origin" : {
+                  "x" : 159.12203979492188,
+                  "y" : 204.121337890625
+                },
+                "size" : {
+                  "width" : 124.97677612304688,
+                  "height" : 61.510406494140625
+                }
+              }
+            },
+            "cyrillic" : {
+              "value" : ""
+            },
+            "greek" : {
+              "value" : ""
+            }
+          }
+        }
+      ],
+      "dateOfExpiryPermanent" : false,
+      "frontProcessingStatus" : 0,
+      "Recognizer_v2::Result" : {
+        "state" : 2
+      },
+      "fullName" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "Basher Bibi",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 233.87240600585938,
+              "y" : 173.35548400878906
+            },
+            "size" : {
+              "width" : 127.32077026367188,
+              "height" : 24.418472290039062
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "backAdditionalProcessingInfo" : {
+        "failedFields" : [
+  
+        ],
+        "imageExtractionFailures" : [
+  
+        ]
+      },
+      "backCameraFrame" : {
+        "frame" : null,
+        "orientation" : 0
+      },
+      "barcode" : {
+        "documentNumber" : "",
+        "religion" : "",
+        "residentialStatus" : "",
+        "placeOfBirth" : "",
+        "driverLicenseDetailedInfo" : {
+          "conditions" : "",
+          "vehicleClassesInfo" : [
+  
+          ],
+          "vehicleClass" : "",
+          "endorsements" : "",
+          "restrictions" : ""
+        },
+        "employer" : "",
+        "dateOfBirth" : {
+          "successfullyParsed" : false,
+          "filledByDomainKnowledge" : false,
+          "originalString" : "",
+          "day" : 0,
+          "month" : 0,
+          "year" : 0
+        },
+        "extendedElements" : {
+          "elements" : [
+  
+          ]
+        },
+        "maritalStatus" : "",
+        "sex" : "",
+        "addressDetailedInfo" : {
+          "street" : "",
+          "city" : "",
+          "jurisdiction" : "",
+          "postalCode" : ""
+        },
+        "personalIdNumber" : "",
+        "additionalNameInformation" : "",
+        "race" : "",
+        "nationality" : "",
+        "dateOfExpiry" : {
+          "successfullyParsed" : false,
+          "filledByDomainKnowledge" : false,
+          "originalString" : "",
+          "day" : 0,
+          "month" : 0,
+          "year" : 0
+        },
+        "documentAdditionalNumber" : "",
+        "profession" : "",
+        "middleName" : "",
+        "barcodeData" : {
+          "dataIsUncertain" : false,
+          "barcodeFormat" : 0,
+          "stringData" : "",
+          "rawBytes" : [
+  
+          ],
+          "location" : [
+  
+          ]
+        },
+        "firstName" : "",
+        "dateOfIssue" : {
+          "successfullyParsed" : false,
+          "filledByDomainKnowledge" : false,
+          "originalString" : "",
+          "day" : 0,
+          "month" : 0,
+          "year" : 0
+        },
+        "issuingAuthority" : "",
+        "lastName" : "",
+        "fullName" : "",
+        "address" : ""
+      },
+      "barcodeStepUsed" : false,
+      "frontAdditionalProcessingInfo" : {
+        "failedFields" : [
+  
+        ],
+        "imageExtractionFailures" : [
+  
+        ]
+      },
+      "documentAdditionalNumber" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "VZL240814",
+          "side" : 1,
+          "location" : {
+            "origin" : {
+              "x" : 175.65220642089844,
+              "y" : 60.925430297851562
+            },
+            "size" : {
+              "width" : 110.75184631347656,
+              "height" : 20.946357727050781
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "mrz" : {
+        "documentType" : 0,
+        "applicationReceiptNumber" : "",
+        "dateOfBirth" : {
+          "successfullyParsed" : false,
+          "filledByDomainKnowledge" : false,
+          "originalString" : "",
+          "day" : 0,
+          "month" : 0,
+          "year" : 0
+        },
+        "opt1" : "",
+        "rawMRZString" : "",
+        "nationality" : "",
+        "dateOfExpiry" : {
+          "successfullyParsed" : false,
+          "filledByDomainKnowledge" : false,
+          "originalString" : "",
+          "day" : 0,
+          "month" : 0,
+          "year" : 0
+        },
+        "verified" : false,
+        "issuer" : "",
+        "gender" : "",
+        "immigrantCaseNumber" : "",
+        "opt2" : "",
+        "secondaryID" : "",
+        "issuerName" : "",
+        "primaryID" : "",
+        "parsed" : false,
+        "nationalityName" : "",
+        "documentCode" : "",
+        "alienNumber" : "",
+        "documentNumber" : ""
+      },
+      "classInfo" : {
+        "isoAlpha3CountryCode" : "PAK",
+        "country" : 55,
+        "region" : 0,
+        "type" : 65,
+        "isoNumericCountryCode" : "586",
+        "isoAlpha2CountryCode" : "PK"
+      },
+      "recognitionMode" : 5,
+      "scanningFirstSideDone" : true,
+      "backProcessingStatus" : 0,
+      "frontCameraFrame" : {
+        "frame" : null,
+        "orientation" : 0
+      },
+      "additionalAddressInformation" : {
+        "arabic" : {
+          "value" : ""
+        },
+        "latin" : {
+          "value" : "Balkh Nahr-e- Shahi Shahrak Kohna",
+          "side" : 0,
+          "location" : {
+            "origin" : {
+              "x" : 236.06346130371094,
+              "y" : 472.66049194335938
+            },
+            "size" : {
+              "width" : 484.10888671875,
+              "height" : 26.0340576171875
+            }
+          }
+        },
+        "cyrillic" : {
+          "value" : ""
+        },
+        "greek" : {
+          "value" : ""
+        }
+      },
+      "driverLicenseDetailedInfo" : {
+        "vehicleClassesInfo" : [
+  
+        ]
+      },
+      "fullDocumentFrontImage" : {
+        "rawImage" : null,
+        "encodedImage" : ""
+      },
+      "barcodeCameraFrame" : {
+        "frame" : null,
+        "orientation" : 0
+      },
+      "dateOfBirth" : {
+        "successfullyParsed" : true,
+        "filledByDomainKnowledge" : false,
+        "originalString" : {
+          "arabic" : {
+            "value" : ""
+          },
+          "latin" : {
+            "value" : "01.01.1999",
+            "side" : 0,
+            "location" : {
+              "origin" : {
+                "x" : 386.72201538085938,
+                "y" : 286.1846923828125
+              },
+              "size" : {
+                "width" : 109.49526977539062,
+                "height" : 21.4765625
+              }
+            }
+          },
+          "cyrillic" : {
+            "value" : ""
+          },
+          "greek" : {
+            "value" : ""
+          }
+        },
+        "day" : 1,
+        "month" : 1,
+        "year" : 1999
+      }
+    }
+  }
