@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Storage } from '@capacitor/storage';
-import { DOCUMENT } from '@angular/common';
 import { BlinkIdScanningService, ScanResult } from './services/blink-id-scanning.service';
 import { ThemeService } from './services/theme.service';
 import { TranslationService } from './services/translation.service';
@@ -34,39 +33,40 @@ import SendData from '../plugins/send-por-data.plugin';
   ],
 })
 export class AppComponent implements OnInit {
+  // Wrap the toggle button and dropdown in a container.
+  @ViewChild('languageSelector', { static: false }) languageSelector!: ElementRef;
+
   scanResults = '';
   isLoading = false;
   errorMessage = '';
   isDarkTheme = false;
   isInfoOpen = false;
+  isLanguageDropdownOpen = false;
 
   // Language properties
   selectedLanguage = 'en';
   languages = [
     { code: 'en', name: 'English' },
-    { code: 'da', name: 'دری' }, // Dari
-    { code: 'ps', name: 'پښتو' }, // Pashto
+    { code: 'da', name: 'دری' },
+    { code: 'ps', name: 'پښتو' },
   ];
 
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
-  private document = inject(DOCUMENT); // For RTL support
+  private document = inject(DOCUMENT);
   public translationService = inject(TranslationService);
 
   constructor() {
-    this.translate.setDefaultLang('en'); // English as fallback
+    this.translate.setDefaultLang('en');
   }
 
   async ngOnInit(): Promise<void> {
-    // Load saved language or default to English
     const { value } = await Storage.get({ key: 'language' });
     this.selectedLanguage = value || 'en';
     this.translate.use(this.selectedLanguage);
     this.setTextDirection();
-
-    // Initialize theme
     this.isDarkTheme = this.themeService.isDarkThemeEnabled();
   }
 
@@ -81,6 +81,43 @@ export class AppComponent implements OnInit {
 
   closeInfo(): void {
     this.isInfoOpen = false;
+  }
+
+  toggleLanguageDropdown(): void {
+    this.isLanguageDropdownOpen = !this.isLanguageDropdownOpen;
+  }
+
+  getSelectedLanguageName(): string {
+    const lang = this.languages.find(l => l.code === this.selectedLanguage);
+    return lang ? lang.name : 'English';
+  }
+
+  onLanguageSelection(lang: string, event: MouseEvent): void {
+    event.stopPropagation();
+    this.onLanguageChange(lang);
+    this.toggleLanguageDropdown();
+  }
+
+  async onLanguageChange(lang: string): Promise<void> {
+    this.selectedLanguage = lang;
+    this.translate.use(lang);
+    await Storage.set({ key: 'language', value: lang });
+    this.setTextDirection();
+  }
+
+  private setTextDirection(): void {
+    const isRTL = ['da', 'ps'].includes(this.selectedLanguage);
+    this.document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Close dropdown if the click is outside the entire language selector container.
+    if (this.isLanguageDropdownOpen && this.languageSelector) {
+      if (!this.languageSelector.nativeElement.contains(event.target)) {
+        this.isLanguageDropdownOpen = false;
+      }
+    }
   }
 
   async onScanMultiSideClick(): Promise<void> {
@@ -216,17 +253,5 @@ export class AppComponent implements OnInit {
       }
     }
     throw new Error('Retry attempts exceeded');
-  }
-
-  async onLanguageChange(lang: string): Promise<void> {
-    this.selectedLanguage = lang;
-    this.translate.use(lang);
-    await Storage.set({ key: 'language', value: lang });
-    this.setTextDirection();
-  }
-
-  private setTextDirection(): void {
-    const isRTL = ['da', 'ps'].includes(this.selectedLanguage);
-    this.document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
   }
 }
