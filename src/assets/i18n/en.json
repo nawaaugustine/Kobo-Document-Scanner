@@ -21,6 +21,8 @@
     "copy": "Copy",
     "save": "Save",
     "lastUpdated": "Updated: 25th February 2025",
+    "id_cards_title":"Proof of Registration, eTazkira, etc.",
+    "passport_tile":"All National Passports",
     "error": {
       "cardNotSupported": "Card not supported or scanning was canceled",
       "scanFailed": "Scanning failed. Please try again.",
