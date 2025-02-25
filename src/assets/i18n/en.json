@@ -24,9 +24,11 @@
     "id_cards_title":"Proof of Registration, eTazkira, etc.",
     "passport_tile":"All National Passports",
     "error": {
-      "cardNotSupported": "Card not supported or scanning was canceled",
+      "cardNotSupported": "The card not supported or scanning was canceled",
       "scanFailed": "Scanning failed. Please try again.",
-      "sendDataFailed": "Failed to send data to KoboCollect. Please try again."
+      "sendDataFailed": "Failed to send data to KoboCollect. Please try again.",
+      "multiSideScanningFailed": "Multi-side scanning failed after multiple attempts. Please try again.",
+      "singleSideScanningFailed": "Single-side scanning failed after multiple attempts. Please try again."
     },
     "results": {
       "fullName": "Full Name",

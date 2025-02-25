@@ -1,8 +1,7 @@
-/* blink-id-por-scanning.service.ts */
-
 import { Injectable } from '@angular/core';
 import * as BlinkID from '@microblink/blinkid-capacitor';
 import { environment } from '../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Interface for final, structured scan results.
@@ -50,7 +49,7 @@ export class BlinkIdScanningService {
 
   private settings: BlinkID.BlinkIdOverlaySettings = new BlinkID.BlinkIdOverlaySettings();
 
-  constructor() {
+  constructor(private translate: TranslateService) {
     this.initializeRecognizers();
   }
 
@@ -82,7 +81,7 @@ export class BlinkIdScanningService {
       } catch (error) {
         attempt++;
         if (attempt >= retries) {
-          throw new Error('Multi-side scanning failed after multiple attempts. Please try again.');
+          throw new Error(this.translate.instant('error.multiSideScanningFailed'));
         }
       }
     }
@@ -107,7 +106,7 @@ export class BlinkIdScanningService {
       } catch (error) {
         attempt++;
         if (attempt >= retries) {
-          throw new Error('Single-side scanning failed after multiple attempts. Please try again.');
+          throw new Error(this.translate.instant('error.singleSideScanningFailed'));
         }
       }
     }
