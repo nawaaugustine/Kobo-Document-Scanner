@@ -1,6 +1,4 @@
-/* app.component.ts */
-
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,15 +6,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { Storage } from '@capacitor/storage';
+import { DOCUMENT } from '@angular/common';
 import { BlinkIdScanningService, ScanResult } from './services/blink-id-scanning.service';
 import { ThemeService } from './services/theme.service';
-import { TranslateModule } from '@ngx-translate/core';
 import { TranslationService } from './services/translation.service';
 import SendData from '../plugins/send-por-data.plugin';
 
-/**
- * Main application component handling theme toggling and document scanning actions.
- */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,8 +28,10 @@ import SendData from '../plugins/send-por-data.plugin';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    TranslateModule
-  ]
+    MatSelectModule,
+    MatFormFieldModule,
+    TranslateModule,
+  ],
 })
 export class AppComponent implements OnInit {
   scanResults = '';
@@ -39,45 +40,49 @@ export class AppComponent implements OnInit {
   isDarkTheme = false;
   isInfoOpen = false;
 
-  // Inject needed services
+  // Language properties
+  selectedLanguage = 'en';
+  languages = [
+    { code: 'en', name: 'English' },
+    { code: 'da', name: 'دری' }, // Dari
+    { code: 'ps', name: 'پښتو' }, // Pashto
+  ];
+
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
   private snackBar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
+  private document = inject(DOCUMENT); // For RTL support
   public translationService = inject(TranslationService);
 
-  ngOnInit(): void {
-    // Initialize theme
-    this.isDarkTheme = this.themeService.isDarkThemeEnabled();
-
-    // Initialize translations (default to English or any saved language)
-    this.translationService.initTranslation('en');
+  constructor() {
+    this.translate.setDefaultLang('en'); // English as fallback
   }
 
-  /**
-   * Toggles the light/dark theme.
-   */
+  async ngOnInit(): Promise<void> {
+    // Load saved language or default to English
+    const { value } = await Storage.get({ key: 'language' });
+    this.selectedLanguage = value || 'en';
+    this.translate.use(this.selectedLanguage);
+    this.setTextDirection();
+
+    // Initialize theme
+    this.isDarkTheme = this.themeService.isDarkThemeEnabled();
+  }
+
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
     this.themeService.enableDarkTheme(this.isDarkTheme);
   }
 
-  /**
-   * Displays information popup.
-   */
   showInfo(): void {
     this.isInfoOpen = true;
   }
 
-  /**
-   * Closes the information popup.
-   */
   closeInfo(): void {
     this.isInfoOpen = false;
   }
 
-  /**
-   * Initiates multi-side scanning. Uses local retry mechanism.
-   */
   async onScanMultiSideClick(): Promise<void> {
     this.scanResults = '';
     this.errorMessage = '';
@@ -97,9 +102,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  /**
-   * Initiates single-side scanning. Uses local retry mechanism.
-   */
   async onScanSingleSideClick(): Promise<void> {
     this.scanResults = '';
     this.errorMessage = '';
@@ -119,77 +121,38 @@ export class AppComponent implements OnInit {
     }
   }
 
-  /**
-   * Processes and formats the scan results, then sends them to KoboCollect if available.
-   * @param results Array of ScanResult objects.
-   */
   private processScanResults(results: ScanResult[]): void {
     if (results && results.length > 0) {
       this.scanResults = this.formatResults(results);
       this.sendDataToKoboCollect(results[0]);
     } else {
-      // Use translated error message from your JSON
-      this.translationService.useLanguage(this.translationService.getCurrentLang()); // ensure current language
-      this.errorMessage = this.translationService
-        .getCurrentLang()
-        ? this.translationService['translate'].instant('error.cardNotSupported')
-        : 'Card not supported or scanning was canceled'; 
-      
-      this.snackBar.open(
-        this.errorMessage,
-        this.translationService['translate'].instant('close'),
-        {
-          duration: 5000,
-          panelClass: 'error-snackbar'
-        }
-      );
+      this.errorMessage = this.translate.instant('error.cardNotSupported');
+      this.snackBar.open(this.errorMessage, this.translate.instant('close'), {
+        duration: 5000,
+        panelClass: 'error-snackbar',
+      });
     }
   }
 
-  /**
-   * Generates a readable string from the ScanResult array.
-   * @param results Array of ScanResult objects.
-   */
   private formatResults(results: ScanResult[]): string {
-    // You can translate each label from "results" in your JSON
     return results
-      .map((result: ScanResult) => {
+      .map((result) => {
         const { frontData, backData } = result;
-
-        const labelFullName = this.translationService['translate'].instant('results.fullName');
-        const labelDateOfBirth = this.translationService['translate'].instant('results.dateOfBirth');
-        const labelDocumentNumber = this.translationService['translate'].instant('results.documentNumber');
-        const labelFathersName = this.translationService['translate'].instant('results.fathersName');
-        const labelAddress = this.translationService['translate'].instant('results.address');
-        const labelSex = this.translationService['translate'].instant('results.sex');
-        const labelDateOfIssue = this.translationService['translate'].instant('results.dateOfIssue');
-        const labelAdditionalNumber = this.translationService['translate'].instant('results.documentAdditionalNumber');
-        const labelDateOfExpiry = this.translationService['translate'].instant('results.dateOfExpiry');
-
-        const formattedFront = `
-          ${labelFullName}: ${frontData.fullName}
-          ${labelDateOfBirth}: ${frontData.dateOfBirth}
-          ${labelDocumentNumber}: ${frontData.documentNumber}
-          ${labelFathersName}: ${frontData.fathersName}
-          ${labelAddress}: ${frontData.address}
-          ${labelSex}: ${frontData.sex}
+        return `
+          ${this.translate.instant('results.fullName')}: ${frontData.fullName}
+          ${this.translate.instant('results.dateOfBirth')}: ${frontData.dateOfBirth}
+          ${this.translate.instant('results.documentNumber')}: ${frontData.documentNumber}
+          ${this.translate.instant('results.fathersName')}: ${frontData.fathersName}
+          ${this.translate.instant('results.address')}: ${frontData.address}
+          ${this.translate.instant('results.sex')}: ${frontData.sex}
+          ${this.translate.instant('results.dateOfIssue')}: ${backData.dateOfIssue}
+          ${this.translate.instant('results.documentAdditionalNumber')}: ${backData.documentAdditionalNumber}
+          ${this.translate.instant('results.dateOfExpiry')}: ${backData.dateOfExpiry}
         `.trim();
-
-        const formattedBack = `
-          ${labelDateOfIssue}: ${backData.dateOfIssue}
-          ${labelAdditionalNumber}: ${backData.documentAdditionalNumber}
-          ${labelDateOfExpiry}: ${backData.dateOfExpiry}
-        `.trim();
-
-        return formattedFront + '\n\n' + formattedBack;
       })
       .join('\n\n');
   }
 
-  /**
-   * Sends the first ScanResult to the KoboCollect app using the SendData plugin.
-   * @param result The first ScanResult from the array.
-   */
   private async sendDataToKoboCollect(result: ScanResult): Promise<void> {
     try {
       const frontData = result.frontData;
@@ -217,7 +180,7 @@ export class AppComponent implements OnInit {
             dependentsInfo,
             dateOfIssue: backData.dateOfIssue,
             documentAdditionalNumber: backData.documentAdditionalNumber,
-            dateOfExpiry: backData.dateOfExpiry
+            dateOfExpiry: backData.dateOfExpiry,
           }),
         3,
         500
@@ -227,10 +190,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  /**
-   * Calculates approximate age from a DD.MM.YYYY string.
-   * @param dateOfBirth Birth date string.
-   */
   private calculateAge(dateOfBirth: string): number {
     const [day, month, year] = dateOfBirth.split('.').map(Number);
     if (!day || !month || !year) return 0;
@@ -239,39 +198,14 @@ export class AppComponent implements OnInit {
     return Math.abs(new Date(diff).getUTCFullYear() - 1970);
   }
 
-  /**
-   * Handles errors by setting a user-friendly message and showing a snackbar alert.
-   * @param error Any unknown error.
-   */
   private handleError(error: unknown): void {
-    // Use translated fallback or the actual error message
-    this.errorMessage = this.getErrorMessage(error) 
-      || this.translationService['translate'].instant('error.scanFailed');
-
-    this.snackBar.open(
-      this.errorMessage,
-      this.translationService['translate'].instant('close'),
-      {
-        duration: 5000,
-        panelClass: 'error-snackbar'
-      }
-    );
+    this.errorMessage = this.translate.instant('error.scanFailed');
+    this.snackBar.open(this.errorMessage, this.translate.instant('close'), {
+      duration: 5000,
+      panelClass: 'error-snackbar',
+    });
   }
 
-  /**
-   * Converts an unknown error into a string message.
-   * @param error Any unknown error.
-   */
-  private getErrorMessage(error: unknown): string {
-    return error instanceof Error ? error.message : String(error);
-  }
-
-  /**
-   * A generic retry helper.
-   * @param fn Async function to execute.
-   * @param retries Max attempts.
-   * @param delay Delay between attempts (ms).
-   */
   private async retry<T>(fn: () => Promise<T>, retries = 3, delay = 500): Promise<T> {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
@@ -284,8 +218,15 @@ export class AppComponent implements OnInit {
     throw new Error('Retry attempts exceeded');
   }
 
-  onLanguageChange(lang: string) {
-    this.translationService.useLanguage(lang);
+  async onLanguageChange(lang: string): Promise<void> {
+    this.selectedLanguage = lang;
+    this.translate.use(lang);
+    await Storage.set({ key: 'language', value: lang });
+    this.setTextDirection();
   }
 
+  private setTextDirection(): void {
+    const isRTL = ['da', 'ps'].includes(this.selectedLanguage);
+    this.document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  }
 }

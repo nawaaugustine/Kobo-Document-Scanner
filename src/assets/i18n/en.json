@@ -20,6 +20,7 @@
     "scanResults": "Scan Results",
     "copy": "Copy",
     "save": "Save",
+    "lastUpdated": "Updated, 25th February 2025",
     "error": {
       "cardNotSupported": "Card not supported or scanning was canceled",
       "scanFailed": "Scanning failed. Please try again.",
