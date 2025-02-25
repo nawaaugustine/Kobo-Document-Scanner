@@ -8,7 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { BlinkIdScanningService, ScanResult } from './services/blink-id-por-scanning.service';
+import { BlinkIdScanningService, ScanResult } from './services/blink-id-scanning.service';
 import { ThemeService } from './services/theme.service';
 import SendData from '../plugins/send-por-data.plugin';
 
