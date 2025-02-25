@@ -7,14 +7,27 @@
   >
     <div class="flex items-center">
       <h1 class="text-3xl font-bold tracking-wide">
-        Kobo Document Scanner
+        {{ "title" | translate }}
+        <!-- Keep version and build if you like -->
         <span
           class="ml-2 text-sm font-medium bg-blue-500/30 text-blue-100 px-2 py-1 rounded-full"
           >v1.2.5 (build 220)</span
         >
       </h1>
     </div>
+
     <div class="flex items-center space-x-3">
+      <!-- Language Selector -->
+      <select
+        #languageSelect
+        (change)="onLanguageChange(languageSelect.value)"
+        [value]="translationService.getCurrentLang()"
+      >
+        <option value="en">English</option>
+        <option value="da">Dari</option>
+        <option value="ps">Pashto</option>
+      </select>
+
       <!-- Theme Toggle Button -->
       <button
         mat-icon-button
@@ -37,7 +50,7 @@
         class="focus:ring-2 focus:ring-blue-400 focus:outline-none flex items-center justify-center px-4 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 active:scale-95"
       >
         <mat-icon class="h-5 w-5 mr-2">help_outline</mat-icon>
-        <span class="leading-none">Help</span>
+        <span class="leading-none">{{ "help" | translate }}</span>
       </button>
     </div>
   </header>
@@ -48,7 +61,7 @@
       class="w-full max-w-2xl bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl p-8 transition-all duration-300"
     >
       <h2 class="text-2xl font-semibold mb-8 text-center">
-        Select Document Type
+        {{ "selectDocumentType" | translate }}
       </h2>
 
       <!-- Document Selection List -->
@@ -62,7 +75,9 @@
         >
           <mat-icon class="h-6 w-6 mr-4 mt-1">document_scanner</mat-icon>
           <div>
-            <div class="text-xl font-semibold">Identity Card</div>
+            <div class="text-xl font-semibold">
+              {{ "identityCard" | translate }}
+            </div>
             <div id="por-desc" class="text-sm text-gray-600 dark:text-gray-300">
               Proof of Registration, eTazkira, etc.
             </div>
@@ -78,7 +93,9 @@
         >
           <mat-icon class="h-6 w-6 mr-4 mt-1">document_scanner</mat-icon>
           <div>
-            <div class="text-xl font-semibold">Passports</div>
+            <div class="text-xl font-semibold">
+              {{ "passports" | translate }}
+            </div>
             <div
               id="tazkira-desc"
               class="text-sm text-gray-600 dark:text-gray-300"
@@ -97,8 +114,12 @@
       >
         <mat-icon class="h-6 w-6 mr-4 mt-1">document_scanner</mat-icon>
         <div>
-          <div class="text-xl font-semibold">ACC Card</div>
-          <div id="acc-desc" class="text-sm text-gray-400">Coming soon</div>
+          <div class="text-xl font-semibold">
+            {{ "accCard" | translate }}
+          </div>
+          <div id="acc-desc" class="text-sm text-gray-400">
+            {{ "comingSoon" | translate }}
+          </div>
         </div>
       </button>
 
@@ -134,14 +155,16 @@
                 />
               </svg>
             </div>
-            <h3 class="text-lg font-semibold">Scan Results</h3>
+            <h3 class="text-lg font-semibold">
+              {{ "scanResults" | translate }}
+            </h3>
           </div>
           <div
             class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600 max-h-40 overflow-y-auto"
           >
-            <pre class="whitespace-pre-wrap text-sm font-mono">{{
-              scanResults
-            }}</pre>
+            <pre class="whitespace-pre-wrap text-sm font-mono"
+              >{{ scanResults }}
+            </pre>
           </div>
           <!-- Results Actions -->
           <div class="flex justify-end mt-4 space-x-3">
@@ -150,14 +173,14 @@
               class="text-sm flex items-center text-gray-600 dark:text-gray-300 px-3 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
             >
               <mat-icon class="h-5 w-5 mr-1">content_copy</mat-icon>
-              <span>Copy</span>
+              <span>{{ "copy" | translate }}</span>
             </button>
             <button
               mat-button
               class="text-sm flex items-center text-gray-600 dark:text-gray-300 px-3 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
             >
               <mat-icon class="h-5 w-5 mr-1">save_alt</mat-icon>
-              <span>Save</span>
+              <span>{{ "save" | translate }}</span>
             </button>
           </div>
         </div>
@@ -169,10 +192,14 @@
   <footer
     class="py-4 px-6 bg-black/10 backdrop-blur-sm text-sm flex justify-between items-center"
   >
-    <div>Status: <span class="font-medium text-green-400">Ready</span></div>
+    <div>
+      {{ "statusReady" | translate }}
+    </div>
     <div class="flex items-center">
       <mat-icon class="h-4 w-4 mr-1 text-blue-300">wifi</mat-icon>
-      <span class="text-blue-300">Connected to Kobo Server</span>
+      <span class="text-blue-300">
+        {{ "connectedToKobo" | translate }}
+      </span>
     </div>
   </footer>
 
@@ -185,7 +212,9 @@
     <div class="h-12 w-12 animate-pulse">
       <mat-spinner diameter="48"></mat-spinner>
     </div>
-    <p class="mt-4 text-white font-medium">Processing document...</p>
+    <p class="mt-4 text-white font-medium">
+      {{ "processingDocument" | translate }}
+    </p>
   </div>
 </div>
 
@@ -206,48 +235,39 @@
       <mat-icon class="h-6 w-6">close</mat-icon>
     </button>
 
-    <h2 class="text-xl font-bold mb-4 text-gray-900">Information</h2>
+    <h2 class="text-xl font-bold mb-4 text-gray-900">
+      {{ "information" | translate }}
+    </h2>
 
-    <h4 class="mt-4 font-semibold">Support Information</h4>
+    <h4 class="mt-4 font-semibold">
+      {{ "supportInfoTitle" | translate }}
+    </h4>
     <p class="text-gray-600 mb-4">
-      The Kobo Document Scanner app is primarily supported by the Information
-      Management (IM) unit in Kabul. For any issues or inquiries regarding the
-      app, please reach out to the IM unit. They are dedicated to providing
-      comprehensive support and ensuring that your experience with the Kobo
-      Document Scanner is seamless and efficient.
+      {{ "supportInfo" | translate }}
     </p>
 
-    <h4 class="mt-4 font-semibold">Development Credit</h4>
+    <h4 class="mt-4 font-semibold">
+      {{ "developmentCreditTitle" | translate }}
+    </h4>
     <p class="text-gray-600 mb-4">
-      The Kobo Document Scanner is developed by the RBAP DIMA team in Bangkok.
-      The DIMA team has put in extensive effort to create a reliable and
-      user-friendly application that integrates smoothly with the KoboCollect
-      app. We are committed to continuous improvement and welcome any feedback
-      to enhance the app's functionality and user experience.
+      {{ "developmentCredit" | translate }}
     </p>
 
-    <h4 class="mt-4 font-semibold">Open Source Information</h4>
-    <p class="text-gray-600 mb-4">
-      The Kobo Document Scanner is an open-source project. You can find the
-      source code and contribute to its development on GitHub. We encourage
-      collaboration and contributions from the community to make the app even
-      better. Visit our GitHub repository at
-      <a
-        class="text-blue-500 hover:underline"
-        href="https://github.com/nawaaugustine/Kobo-Document-Scanner"
-        target="_blank"
-        >GitHub Repository</a
-      >
-      to explore the code, report issues, and participate in the development
-      process.
-    </p>
+    <h4 class="mt-4 font-semibold">
+      {{ "openSourceInfoTitle" | translate }}
+    </h4>
+    <!-- Because this has a link in it, use [innerHTML] -->
+    <p
+      class="text-gray-600 mb-4"
+      [innerHTML]="'openSourceInfo' | translate"
+    ></p>
 
     <button
       mat-button
       class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg transition-all duration-200"
       (click)="closeInfo()"
     >
-      Close
+      {{ "close" | translate }}
     </button>
   </div>
 </div>
@@ -260,5 +280,11 @@
     to {
       transform: translateY(0);
     }
+  }
+  .language-selector {
+    min-width: 120px;
+  }
+  .language-selector .mat-mdc-form-field-subscript-wrapper {
+    display: none;
   }
 </style>

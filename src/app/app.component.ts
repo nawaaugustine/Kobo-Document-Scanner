@@ -10,10 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { BlinkIdScanningService, ScanResult } from './services/blink-id-scanning.service';
 import { ThemeService } from './services/theme.service';
-
-// IMPORTANT: You must actually import TranslateModule from '@ngx-translate/core'
 import { TranslateModule } from '@ngx-translate/core';
-
 import { TranslationService } from './services/translation.service';
 import SendData from '../plugins/send-por-data.plugin';
 
@@ -46,7 +43,7 @@ export class AppComponent implements OnInit {
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
   private snackBar = inject(MatSnackBar);
-  private translationService = inject(TranslationService);
+  public translationService = inject(TranslationService);
 
   ngOnInit(): void {
     // Initialize theme
@@ -286,4 +283,9 @@ export class AppComponent implements OnInit {
     }
     throw new Error('Retry attempts exceeded');
   }
+
+  onLanguageChange(lang: string) {
+    this.translationService.useLanguage(lang);
+  }
+
 }

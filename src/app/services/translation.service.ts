@@ -36,7 +36,7 @@ export class TranslationService {
     const storedLang = localStorage.getItem('appLanguage') || defaultLang;
 
     // Supported languages:
-    this.translate.addLangs(['en', 'fa', 'ps']);
+    this.translate.addLangs(['en', 'da', 'ps']);
     this.translate.setDefaultLang(defaultLang);
 
     // Use whichever is stored or default:
