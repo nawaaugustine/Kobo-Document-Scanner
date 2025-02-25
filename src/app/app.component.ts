@@ -1,3 +1,5 @@
+/* app.component.ts */
+
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,11 +8,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
 import { BlinkIdScanningService, ScanResult } from './services/blink-id-por-scanning.service';
 import { ThemeService } from './services/theme.service';
 import SendData from '../plugins/send-por-data.plugin';
 
+/**
+ * Main application component handling theme toggling and document scanning actions.
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -28,9 +32,9 @@ import SendData from '../plugins/send-por-data.plugin';
 })
 export class AppComponent implements OnInit {
   title = 'Kobo Document Scanner';
-  scanResults: string = '';
+  scanResults = '';
   isLoading = false;
-  errorMessage: string = '';
+  errorMessage = '';
   isDarkTheme = false;
   isInfoOpen = false;
 
@@ -43,7 +47,7 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Toggles the theme between dark and light.
+   * Toggles the light/dark theme.
    */
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
@@ -51,88 +55,111 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Opens the help/information popup.
+   * Displays information popup.
    */
   showInfo(): void {
     this.isInfoOpen = true;
   }
 
   /**
-   * Closes the help/information popup.
+   * Closes the information popup.
    */
   closeInfo(): void {
     this.isInfoOpen = false;
   }
 
   /**
-   * Initiates the scanning process with retries.
+   * Initiates multi-side scanning. Uses local retry mechanism.
    */
-  async onScanClick(): Promise<void> {
+  async onScanMultiSideClick(): Promise<void> {
     this.scanResults = '';
     this.errorMessage = '';
     this.isLoading = true;
+
     try {
-      const startTime = performance.now();
-      const results: ScanResult[] = await this.retry(
+      const results = await this.retry(
         () => this.blinkIdScanningService.scanDocumentMultiSide(),
         3,
         500
       );
-      console.log(`Scanning took ${performance.now() - startTime} ms`);
       this.processScanResults(results);
     } catch (error) {
-      console.error('Scanning error:', error);
-      this.errorMessage = this.getErrorMessage(error);
+      this.handleError(error);
     } finally {
       this.isLoading = false;
     }
   }
 
   /**
-   * Processes the scan results by formatting them for display
-   * and sending the first result to the SendData plugin.
+   * Initiates single-side scanning. Uses local retry mechanism.
+   */
+  async onScanSingleSideClick(): Promise<void> {
+    this.scanResults = '';
+    this.errorMessage = '';
+    this.isLoading = true;
+
+    try {
+      const results = await this.retry(
+        () => this.blinkIdScanningService.scanDocumentSingleSide(),
+        3,
+        500
+      );
+      this.processScanResults(results);
+    } catch (error) {
+      this.handleError(error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Processes and formats the scan results, then sends them to KoboCollect if available.
    * @param results Array of ScanResult objects.
    */
   private processScanResults(results: ScanResult[]): void {
     if (results && results.length > 0) {
       this.scanResults = this.formatResults(results);
-      // Send the first scan result (adjust if you need a different selection)
       this.sendDataToKoboCollect(results[0]);
     } else {
-      this.errorMessage = 'No results or scanning was canceled';
+      this.errorMessage = 'Card not supported or scanning was canceled';
+      this.snackBar.open(this.errorMessage, 'Close', {
+        duration: 5000,
+        panelClass: 'error-snackbar'
+      });
     }
   }
 
   /**
-   * Formats scan results into a display string.
+   * Generates a readable string from the ScanResult array.
    * @param results Array of ScanResult objects.
-   * @returns A formatted string.
    */
   private formatResults(results: ScanResult[]): string {
-    return results.map(result => {
-      const { frontData, backData } = result;
-      const formattedFront = `
-        Full Name: ${frontData.fullName}
-        Date of Birth: ${frontData.dateOfBirth}
-        Document Number: ${frontData.documentNumber}
-        Father's Name: ${frontData.fathersName}
-        Address: ${frontData.address}
-        Sex: ${frontData.sex}
-      `.trim();
+    return results
+      .map((result: ScanResult) => {
+        const { frontData, backData } = result;
+        const formattedFront = `
+          Full Name: ${frontData.fullName}
+          Date of Birth: ${frontData.dateOfBirth}
+          Document Number: ${frontData.documentNumber}
+          Father's Name: ${frontData.fathersName}
+          Address: ${frontData.address}
+          Sex: ${frontData.sex}
+        `.trim();
 
-      const formattedBack = `
-        Date of Issue: ${backData.dateOfIssue}
-        Document Additional Number: ${backData.documentAdditionalNumber}
-        Date of Expiry: ${backData.dateOfExpiry}
-      `.trim();
+        const formattedBack = `
+          Date of Issue: ${backData.dateOfIssue}
+          Document Additional Number: ${backData.documentAdditionalNumber}
+          Date of Expiry: ${backData.dateOfExpiry}
+        `.trim();
 
-      return formattedFront + '\n\n' + formattedBack;
-    }).join('\n\n');
+        return formattedFront + '\n\n' + formattedBack;
+      })
+      .join('\n\n');
   }
 
   /**
-   * Sends scan data to KoboCollect via the SendData plugin.
-   * @param result A structured ScanResult object.
+   * Sends the first ScanResult to the KoboCollect app using the SendData plugin.
+   * @param result The first ScanResult from the array.
    */
   private async sendDataToKoboCollect(result: ScanResult): Promise<void> {
     try {
@@ -142,8 +169,7 @@ export class AppComponent implements OnInit {
         typeof result.dependentsInfo === 'string'
           ? result.dependentsInfo
           : JSON.stringify(result.dependentsInfo || []);
-      
-      // Call the SendData plugin with all required fields.
+
       await this.retry(
         () =>
           SendData.sendData({
@@ -159,8 +185,7 @@ export class AppComponent implements OnInit {
             gender: frontData.sex,
             frontImage: result.frontImage,
             backImage: result.backImage,
-            dependentsInfo: dependentsInfo,
-            // New backData fields:
+            dependentsInfo,
             dateOfIssue: backData.dateOfIssue,
             documentAdditionalNumber: backData.documentAdditionalNumber,
             dateOfExpiry: backData.dateOfExpiry
@@ -168,40 +193,48 @@ export class AppComponent implements OnInit {
         3,
         500
       );
-      console.log('Data sent to KoboCollect successfully');
     } catch (error) {
-      console.error('Failed to send data:', error);
-      this.errorMessage = this.getErrorMessage(error);
+      this.handleError(error);
     }
   }
 
   /**
-   * Calculates age given a birth date string in format DD.MM.YYYY.
-   * @param dateOfBirth Birth date as string.
-   * @returns Calculated age as a number.
+   * Calculates approximate age from a DD.MM.YYYY string.
+   * @param dateOfBirth Birth date string.
    */
   private calculateAge(dateOfBirth: string): number {
     const [day, month, year] = dateOfBirth.split('.').map(Number);
+    if (!day || !month || !year) return 0;
     const birthDate = new Date(year, month - 1, day);
-    const ageDifMs = Date.now() - birthDate.getTime();
-    return Math.abs(new Date(ageDifMs).getUTCFullYear() - 1970);
+    const diff = Date.now() - birthDate.getTime();
+    return Math.abs(new Date(diff).getUTCFullYear() - 1970);
   }
 
   /**
-   * Converts an error object into a user-friendly message.
-   * @param error The error encountered.
-   * @returns Error message string.
+   * Handles errors by setting a user-friendly message and showing a snackbar alert.
+   * @param error Any unknown error.
+   */
+  private handleError(error: unknown): void {
+    this.errorMessage = this.getErrorMessage(error);
+    this.snackBar.open(this.errorMessage, 'Close', {
+      duration: 5000,
+      panelClass: 'error-snackbar'
+    });
+  }
+
+  /**
+   * Converts an unknown error into a string message.
+   * @param error Any unknown error.
    */
   private getErrorMessage(error: unknown): string {
     return error instanceof Error ? error.message : String(error);
   }
 
   /**
-   * Generic retry helper for async functions.
-   * @param fn Function to retry.
-   * @param retries Number of attempts.
-   * @param delay Delay between attempts in milliseconds.
-   * @returns The resolved value of the function.
+   * A generic retry helper.
+   * @param fn Async function to execute.
+   * @param retries Max attempts.
+   * @param delay Delay between attempts (ms).
    */
   private async retry<T>(fn: () => Promise<T>, retries = 3, delay = 500): Promise<T> {
     for (let attempt = 0; attempt < retries; attempt++) {
@@ -209,7 +242,7 @@ export class AppComponent implements OnInit {
         return await fn();
       } catch (error) {
         if (attempt === retries - 1) throw error;
-        await new Promise(res => setTimeout(res, delay));
+        await new Promise((res) => setTimeout(res, delay));
       }
     }
     throw new Error('Retry attempts exceeded');

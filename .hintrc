@@ -8,6 +8,7 @@
       {
         "aria-required-children": "off"
       }
-    ]
+    ],
+    "disown-opener": "off"
   }
 }

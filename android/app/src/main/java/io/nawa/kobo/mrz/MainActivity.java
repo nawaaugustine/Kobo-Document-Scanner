@@ -1,3 +1,5 @@
+/* MainActivity.java */
+
 package io.nawa.kobo.mrz;
 
 import android.app.AlertDialog;
@@ -5,17 +7,17 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 import com.getcapacitor.BridgeActivity;
 import java.io.File;
 
+/**
+ * MainActivity acts as the bridge for sending data back to KoboCollect via Intents.
+ */
 public class MainActivity extends BridgeActivity {
-    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate called");
         registerPlugin(SendDataPlugin.class);
         super.onCreate(savedInstanceState);
 
@@ -25,6 +27,9 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    /**
+     * Shows a prompt for users who did not launch this app via KoboCollect.
+     */
     private void showLaunchFromKoboCollectMessage() {
         new AlertDialog.Builder(this)
             .setTitle("Launch from KoboCollect")
@@ -36,106 +41,110 @@ public class MainActivity extends BridgeActivity {
     }
 
     /**
-     * Sends data back to the calling activity via an intent.
-     *
-     * Logs each step of the process to help debug where data might be missing.
-     *
-     * @param dateOfBirth Standard front-side field.
-     * @param CoAAddress  Standard front-side field.
-     * @param province    Standard front-side field.
-     * @param district    Standard front-side field.
-     * @param village     Standard front-side field.
-     * @param documentNumber Standard front-side field.
-     * @param fullName    Standard front-side field.
-     * @param fathersName Standard front-side field.
-     * @param age         Standard front-side field.
-     * @param gender      Standard front-side field.
-     * @param frontImage  Front image in Base64 format.
-     * @param backImage   Back image in Base64 format.
-     * @param dependentsInfo Dependent information.
-     * @param dateOfIssue New back-side field.
-     * @param documentAdditionalNumber New back-side field.
-     * @param dateOfExpiry New back-side field.
+     * Sends data back to KoboCollect using the standard Android result mechanism.
+     * @param dateOfBirth Date of birth from front side data.
+     * @param CoAAddress Address from front side data.
+     * @param province Province from front side data.
+     * @param district District from front side data.
+     * @param village Village from front side data.
+     * @param documentNumber ID number.
+     * @param fullName Person's full name.
+     * @param fathersName Father's name if applicable.
+     * @param age Computed age.
+     * @param gender Gender field.
+     * @param frontImage Base64 front image data.
+     * @param backImage Base64 back image data.
+     * @param dependentsInfo JSON or string with dependents.
+     * @param dateOfIssue Back side info.
+     * @param documentAdditionalNumber Back side info.
+     * @param dateOfExpiry Back side info.
      */
-    public void sendData(String dateOfBirth, String CoAAddress, String province, String district, String village,
-                         String documentNumber, String fullName, String fathersName, int age, String gender,
-                         String frontImage, String backImage, String dependentsInfo,
-                         String dateOfIssue, String documentAdditionalNumber, String dateOfExpiry) {
-        Log.d(TAG, "sendData called with: dateOfBirth=" + dateOfBirth +
-                ", CoAAddress=" + CoAAddress +
-                ", province=" + province +
-                ", district=" + district +
-                ", village=" + village +
-                ", documentNumber=" + documentNumber +
-                ", fullName=" + fullName +
-                ", fathersName=" + fathersName +
-                ", age=" + age +
-                ", gender=" + gender +
-                ", frontImage=" + (frontImage != null ? "[present]" : "null") +
-                ", backImage=" + (backImage != null ? "[present]" : "null") +
-                ", dependentsInfo=" + dependentsInfo +
-                ", dateOfIssue=" + dateOfIssue +
-                ", documentAdditionalNumber=" + documentAdditionalNumber +
-                ", dateOfExpiry=" + dateOfExpiry);
+    public void sendData(
+        String dateOfBirth,
+        String CoAAddress,
+        String province,
+        String district,
+        String village,
+        String documentNumber,
+        String fullName,
+        String fathersName,
+        int age,
+        String gender,
+        String frontImage,
+        String backImage,
+        String dependentsInfo,
+        String dateOfIssue,
+        String documentAdditionalNumber,
+        String dateOfExpiry
+    ) {
         try {
             Intent intent = new Intent();
             Uri frontImageUri = null;
             Uri backImageUri = null;
 
-            // Process front image if available.
+            // Convert front image from Base64 to file if provided
             if (frontImage != null && !frontImage.isEmpty()) {
                 File frontImageFile = FileUtils.base64ToFile(this, frontImage, "frontImage.jpg");
                 if (frontImageFile != null) {
-                    Log.d(TAG, "Converted front image to file: " + frontImageFile.getAbsolutePath());
                     frontImageUri = FileUtils.getUriForFile(this, frontImageFile);
-                    Log.d(TAG, "Obtained front image URI: " + frontImageUri);
-                } else {
-                    Log.w(TAG, "Failed to convert front image from base64.");
                 }
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
 
-            // Process back image if available.
+            // Convert back image from Base64 to file if provided
             if (backImage != null && !backImage.isEmpty()) {
                 File backImageFile = FileUtils.base64ToFile(this, backImage, "backImage.jpg");
                 if (backImageFile != null) {
-                    Log.d(TAG, "Converted back image to file: " + backImageFile.getAbsolutePath());
                     backImageUri = FileUtils.getUriForFile(this, backImageFile);
-                    Log.d(TAG, "Obtained back image URI: " + backImageUri);
-                } else {
-                    Log.w(TAG, "Failed to convert back image from base64.");
                 }
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
 
-            // Add extras to the intent including both standard and new backData fields.
-            IntentUtils.addExtras(intent, dateOfBirth, CoAAddress, province, district, village,
-                    documentNumber, fullName, fathersName, age, gender, frontImageUri, backImageUri, dependentsInfo,
-                    dateOfIssue, documentAdditionalNumber, dateOfExpiry);
-            Log.d(TAG, "Extras added to intent: " + intent.getExtras());
+            // Attach extras
+            IntentUtils.addExtras(
+                intent,
+                dateOfBirth,
+                CoAAddress,
+                province,
+                district,
+                village,
+                documentNumber,
+                fullName,
+                fathersName,
+                age,
+                gender,
+                frontImageUri,
+                backImageUri,
+                dependentsInfo,
+                dateOfIssue,
+                documentAdditionalNumber,
+                dateOfExpiry
+            );
 
-            // Add ClipData for images if available.
+            // Attach clip data for images if any
             if (frontImageUri != null) {
-                ClipData clipData = new ClipData("frontImage", new String[]{"image/jpeg"}, new ClipData.Item(frontImageUri));
+                ClipData clipData = new ClipData(
+                    "frontImage",
+                    new String[]{"image/jpeg"},
+                    new ClipData.Item(frontImageUri)
+                );
                 if (backImageUri != null) {
                     clipData.addItem(new ClipData.Item(backImageUri));
                 }
                 intent.setClipData(clipData);
-                Log.d(TAG, "ClipData added for front (and back) image(s).");
             } else if (backImageUri != null) {
-                ClipData clipData = new ClipData("backImage", new String[]{"image/jpeg"}, new ClipData.Item(backImageUri));
+                ClipData clipData = new ClipData(
+                    "backImage",
+                    new String[]{"image/jpeg"},
+                    new ClipData.Item(backImageUri)
+                );
                 intent.setClipData(clipData);
-                Log.d(TAG, "ClipData added for back image.");
-            } else {
-                Log.d(TAG, "No images available to add to ClipData.");
             }
 
-            // Set the result and finish the activity.
+            // Return to KoboCollect
             setResult(RESULT_OK, intent);
-            Log.d(TAG, "Result set with intent, finishing activity.");
             finish();
         } catch (Exception e) {
-            Log.e(TAG, "Error sending data", e);
             showErrorNotification("Failed to send data to KoboCollect. Please try again. If the issue persists, contact support.");
         }
     }
