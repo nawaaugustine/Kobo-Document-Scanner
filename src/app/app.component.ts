@@ -10,6 +10,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { BlinkIdScanningService, ScanResult } from './services/blink-id-scanning.service';
 import { ThemeService } from './services/theme.service';
+
+// IMPORTANT: You must actually import TranslateModule from '@ngx-translate/core'
+import { TranslateModule } from '@ngx-translate/core';
+
+import { TranslationService } from './services/translation.service';
 import SendData from '../plugins/send-por-data.plugin';
 
 /**
@@ -18,7 +23,6 @@ import SendData from '../plugins/send-por-data.plugin';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -27,23 +31,29 @@ import SendData from '../plugins/send-por-data.plugin';
     MatToolbarModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    TranslateModule
   ]
 })
 export class AppComponent implements OnInit {
-  title = 'Kobo Document Scanner';
   scanResults = '';
   isLoading = false;
   errorMessage = '';
   isDarkTheme = false;
   isInfoOpen = false;
 
+  // Inject needed services
   private blinkIdScanningService = inject(BlinkIdScanningService);
   private themeService = inject(ThemeService);
   private snackBar = inject(MatSnackBar);
+  private translationService = inject(TranslationService);
 
   ngOnInit(): void {
+    // Initialize theme
     this.isDarkTheme = this.themeService.isDarkThemeEnabled();
+
+    // Initialize translations (default to English or any saved language)
+    this.translationService.initTranslation('en');
   }
 
   /**
@@ -121,11 +131,21 @@ export class AppComponent implements OnInit {
       this.scanResults = this.formatResults(results);
       this.sendDataToKoboCollect(results[0]);
     } else {
-      this.errorMessage = 'Card not supported or scanning was canceled';
-      this.snackBar.open(this.errorMessage, 'Close', {
-        duration: 5000,
-        panelClass: 'error-snackbar'
-      });
+      // Use translated error message from your JSON
+      this.translationService.useLanguage(this.translationService.getCurrentLang()); // ensure current language
+      this.errorMessage = this.translationService
+        .getCurrentLang()
+        ? this.translationService['translate'].instant('error.cardNotSupported')
+        : 'Card not supported or scanning was canceled'; 
+      
+      this.snackBar.open(
+        this.errorMessage,
+        this.translationService['translate'].instant('close'),
+        {
+          duration: 5000,
+          panelClass: 'error-snackbar'
+        }
+      );
     }
   }
 
@@ -134,22 +154,34 @@ export class AppComponent implements OnInit {
    * @param results Array of ScanResult objects.
    */
   private formatResults(results: ScanResult[]): string {
+    // You can translate each label from "results" in your JSON
     return results
       .map((result: ScanResult) => {
         const { frontData, backData } = result;
+
+        const labelFullName = this.translationService['translate'].instant('results.fullName');
+        const labelDateOfBirth = this.translationService['translate'].instant('results.dateOfBirth');
+        const labelDocumentNumber = this.translationService['translate'].instant('results.documentNumber');
+        const labelFathersName = this.translationService['translate'].instant('results.fathersName');
+        const labelAddress = this.translationService['translate'].instant('results.address');
+        const labelSex = this.translationService['translate'].instant('results.sex');
+        const labelDateOfIssue = this.translationService['translate'].instant('results.dateOfIssue');
+        const labelAdditionalNumber = this.translationService['translate'].instant('results.documentAdditionalNumber');
+        const labelDateOfExpiry = this.translationService['translate'].instant('results.dateOfExpiry');
+
         const formattedFront = `
-          Full Name: ${frontData.fullName}
-          Date of Birth: ${frontData.dateOfBirth}
-          Document Number: ${frontData.documentNumber}
-          Father's Name: ${frontData.fathersName}
-          Address: ${frontData.address}
-          Sex: ${frontData.sex}
+          ${labelFullName}: ${frontData.fullName}
+          ${labelDateOfBirth}: ${frontData.dateOfBirth}
+          ${labelDocumentNumber}: ${frontData.documentNumber}
+          ${labelFathersName}: ${frontData.fathersName}
+          ${labelAddress}: ${frontData.address}
+          ${labelSex}: ${frontData.sex}
         `.trim();
 
         const formattedBack = `
-          Date of Issue: ${backData.dateOfIssue}
-          Document Additional Number: ${backData.documentAdditionalNumber}
-          Date of Expiry: ${backData.dateOfExpiry}
+          ${labelDateOfIssue}: ${backData.dateOfIssue}
+          ${labelAdditionalNumber}: ${backData.documentAdditionalNumber}
+          ${labelDateOfExpiry}: ${backData.dateOfExpiry}
         `.trim();
 
         return formattedFront + '\n\n' + formattedBack;
@@ -215,11 +247,18 @@ export class AppComponent implements OnInit {
    * @param error Any unknown error.
    */
   private handleError(error: unknown): void {
-    this.errorMessage = this.getErrorMessage(error);
-    this.snackBar.open(this.errorMessage, 'Close', {
-      duration: 5000,
-      panelClass: 'error-snackbar'
-    });
+    // Use translated fallback or the actual error message
+    this.errorMessage = this.getErrorMessage(error) 
+      || this.translationService['translate'].instant('error.scanFailed');
+
+    this.snackBar.open(
+      this.errorMessage,
+      this.translationService['translate'].instant('close'),
+      {
+        duration: 5000,
+        panelClass: 'error-snackbar'
+      }
+    );
   }
 
   /**
