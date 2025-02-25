@@ -1,288 +1,286 @@
-<div
-  class="min-h-screen flex flex-col bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400 text-white font-sans"
->
-  <!-- Header -->
-  <header
-    class="flex items-center justify-between px-6 py-4 shadow-lg bg-white/15 backdrop-blur-md"
-  >
-    <div class="flex items-center">
-      <h1 class="text-3xl font-bold tracking-wide">
-        {{ "title" | translate }}
-        <span
-          class="ml-2 text-sm font-medium bg-blue-500/30 text-blue-100 px-2 py-1 rounded-full"
-          >v1.2.5 (build 220)</span
-        >
-      </h1>
-    </div>
-    <div class="flex items-center space-x-3">
-      <!-- Theme Toggle Button -->
-      <button
-        mat-icon-button
-        (click)="toggleTheme()"
-        [attr.aria-label]="
-          'Switch to ' + (isDarkTheme ? 'light' : 'dark') + ' mode'
-        "
-        class="focus:ring-2 focus:ring-blue-400 focus:outline-none w-10 h-10 rounded-lg hover:bg-white/20 transition-all duration-200 active:scale-95 flex items-center justify-center"
-      >
-        <mat-icon class="h-6 w-6">
-          {{ isDarkTheme ? "brightness_7" : "brightness_4" }}
-        </mat-icon>
-      </button>
 
-      <!-- Language Selector Container -->
-      <div class="relative" #languageSelector>
-        <button
-          (click)="toggleLanguageDropdown()"
-          class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <span>{{ getSelectedLanguageName() }}</span>
-          <mat-icon>
-            {{
-              isLanguageDropdownOpen
-                ? "keyboard_arrow_up"
-                : "keyboard_arrow_down"
-            }}
-          </mat-icon>
-        </button>
-
-        <!-- Language Dropdown Menu -->
-        <div
-          *ngIf="isLanguageDropdownOpen"
-          class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 language-dropdown"
-          #languageDropdown
-        >
-          <button
-            *ngFor="let lang of languages"
-            (click)="onLanguageSelection(lang.code, $event)"
-            class="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-            [class.bg-blue-100]="selectedLanguage === lang.code"
-            [ngClass]="{
-              'dark:bg-blue-900/30': selectedLanguage === lang.code
-            }"
-          >
-            {{ lang.name }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Help Button -->
-      <button
-        mat-button
-        (click)="showInfo()"
-        aria-label="Show Help Information"
-        class="focus:ring-2 focus:ring-blue-400 focus:outline-none px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 active:scale-95 flex items-center"
-      >
-        <mat-icon class="h-5 w-5 mr-2">help_outline</mat-icon>
-        <span>{{ "help" | translate }}</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
     <div
-      class="w-full max-w-2xl bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl p-8 transition-all duration-300"
+      class="min-h-screen flex flex-col bg-gradient-to-br from-blue-800 via-blue-600 to-blue-400 text-white font-sans"
     >
-      <h2 class="text-2xl font-semibold mb-8 text-center">
-        {{ "selectDocumentType" | translate }}
-      </h2>
-
-      <!-- Document Selection Cards -->
-      <div class="grid gap-4">
-        <button
-          (click)="onScanMultiSideClick()"
-          [disabled]="isLoading"
-          class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center transition-all duration-200"
-        >
-          <mat-icon class="h-8 w-8 mr-4 text-blue-500"
-            >document_scanner</mat-icon
-          >
-          <div class="text-left">
-            <div class="text-xl font-semibold">
-              {{ "identityCard" | translate }}
-            </div>
-            <div class="text-sm text-gray-600 dark:text-gray-300">
-              Proof of Registration, eTazkira, etc.
-            </div>
-          </div>
-        </button>
-
-        <button
-          (click)="onScanSingleSideClick()"
-          [disabled]="isLoading"
-          class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center transition-all duration-200"
-        >
-          <mat-icon class="h-8 w-8 mr-4 text-blue-500"
-            >document_scanner</mat-icon
-          >
-          <div class="text-left">
-            <div class="text-xl font-semibold">
-              {{ "passports" | translate }}
-            </div>
-            <div class="text-sm text-gray-600 dark:text-gray-300">
-              All National Passports
-            </div>
-          </div>
-        </button>
-
-        <button
-          disabled
-          class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-70 flex items-center cursor-not-allowed"
-        >
-          <mat-icon class="h-8 w-8 mr-4 text-gray-400"
-            >document_scanner</mat-icon
-          >
-          <div class="text-left">
-            <div class="text-xl font-semibold">{{ "accCard" | translate }}</div>
-            <div class="text-sm text-gray-400">
-              {{ "comingSoon" | translate }}
-            </div>
-          </div>
-        </button>
-      </div>
-
-      <!-- Error Message -->
-      <div
-        *ngIf="errorMessage"
-        class="mt-4 p-4 bg-red-100 text-red-800 rounded-lg flex items-center"
+      <!-- Header -->
+      <header
+        class="flex items-center justify-between px-6 py-4 shadow-lg bg-white/15 backdrop-blur-md"
       >
-        <mat-icon class="mr-2">error_outline</mat-icon>
-        {{ errorMessage }}
-      </div>
-
-      <!-- Scan Results -->
-      <div *ngIf="scanResults" class="mt-8" aria-live="polite">
-        <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 shadow-inner">
-          <div class="flex items-center mb-4">
-            <mat-icon class="h-6 w-6 text-green-600 mr-2"
-              >check_circle</mat-icon
+        <div class="flex items-center">
+          <h1 class="text-3xl font-bold tracking-wide">
+            {{ "title" | translate }}
+            <span
+              class="ml-2 text-sm font-medium bg-blue-500/30 text-blue-100 px-2 py-1 rounded-full"
+              >v1.2.5 (build 220)</span
             >
-            <h3 class="text-lg font-semibold">
-              {{ "scanResults" | translate }}
-            </h3>
-          </div>
-          <div
-            class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600 max-h-40 overflow-y-auto"
+          </h1>
+        </div>
+        <div class="flex items-center space-x-3">
+          <!-- Theme Toggle Button -->
+          <button
+            mat-icon-button
+            (click)="toggleTheme()"
+            [attr.aria-label]="
+              'Switch to ' + (isDarkTheme ? 'light' : 'dark') + ' mode'
+            "
+            class="focus:ring-2 focus:ring-blue-400 focus:outline-none w-10 h-10 rounded-lg hover:bg-white/20 transition-all duration-200 active:scale-95 flex items-center justify-center"
           >
-            <pre class="whitespace-pre-wrap text-sm font-mono">{{
-              scanResults
-            }}</pre>
-          </div>
-          <div class="flex justify-end mt-4 space-x-3">
+            <mat-icon class="h-6 w-6">
+              {{ isDarkTheme ? "brightness_7" : "brightness_4" }}
+            </mat-icon>
+          </button>
+
+          <!-- Language Selector Container -->
+          <div class="relative" #languageSelector>
             <button
-              mat-button
-              class="text-sm flex items-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              (click)="toggleLanguageDropdown()"
+              class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <mat-icon class="h-5 w-5 mr-1">content_copy</mat-icon>
-              {{ "copy" | translate }}
+              <span>{{ getSelectedLanguageName() }}</span>
+              <mat-icon>
+                {{
+                  isLanguageDropdownOpen
+                    ? "keyboard_arrow_up"
+                    : "keyboard_arrow_down"
+                }}
+              </mat-icon>
             </button>
-            <button
-              mat-button
-              class="text-sm flex items-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+
+            <!-- Language Dropdown Menu -->
+            <div
+              *ngIf="isLanguageDropdownOpen"
+              class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-50 language-dropdown"
+              #languageDropdown
             >
-              <mat-icon class="h-5 w-5 mr-1">save_alt</mat-icon>
-              {{ "save" | translate }}
-            </button>
+              <button
+                *ngFor="let lang of languages"
+                (click)="onLanguageSelection(lang.code, $event)"
+                class="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                [class.bg-blue-100]="selectedLanguage === lang.code"
+                [ngClass]="{
+                  'dark:bg-blue-900/30': selectedLanguage === lang.code
+                }"
+              >
+                {{ lang.name }}
+              </button>
+            </div>
           </div>
         </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div
+          class="w-full max-w-2xl bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl p-8 transition-all duration-300"
+        >
+          <h2 class="text-2xl font-semibold mb-8 text-center">
+            {{ "selectDocumentType" | translate }}
+          </h2>
+
+          <!-- Document Selection Cards -->
+          <div class="grid gap-4">
+            <button
+              (click)="onScanMultiSideClick()"
+              [disabled]="isLoading"
+              class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center transition-all duration-200"
+            >
+              <mat-icon class="h-8 w-8 mr-4 text-white"
+                >document_scanner</mat-icon
+              >
+              <div class="text-left">
+                <div class="text-xl font-semibold">
+                  {{ "identityCard" | translate }}
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">
+                  Proof of Registration, eTazkira, etc.
+                </div>
+              </div>
+            </button>
+
+            <button
+              (click)="onScanSingleSideClick()"
+              [disabled]="isLoading"
+              class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center transition-all duration-200"
+            >
+              <mat-icon class="h-8 w-8 mr-4 text-white"
+                >document_scanner</mat-icon
+              >
+              <div class="text-left">
+                <div class="text-xl font-semibold">
+                  {{ "passports" | translate }}
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-300">
+                  All National Passports
+                </div>
+              </div>
+            </button>
+
+            <button
+              disabled
+              class="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 opacity-70 flex items-center cursor-not-allowed"
+            >
+              <mat-icon class="h-8 w-8 mr-4 text-white"
+                >document_scanner</mat-icon
+              >
+              <div class="text-left">
+                <div class="text-xl font-semibold">
+                  {{ "accCard" | translate }}
+                </div>
+                <div class="text-sm text-gray-400">
+                  {{ "comingSoon" | translate }}
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Error Message -->
+          <div
+            *ngIf="errorMessage"
+            class="mt-4 p-4 bg-red-100 text-red-800 rounded-lg flex items-center"
+          >
+            <mat-icon class="mr-2">error_outline</mat-icon>
+            {{ errorMessage }}
+          </div>
+
+          <!-- Scan Results -->
+          <div *ngIf="scanResults" class="mt-8" aria-live="polite">
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 shadow-inner">
+              <div class="flex items-center mb-4">
+                <mat-icon class="h-6 w-6 text-green-600 mr-2"
+                  >check_circle</mat-icon
+                >
+                <h3 class="text-lg font-semibold">
+                  {{ "scanResults" | translate }}
+                </h3>
+              </div>
+              <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600 max-h-40 overflow-y-auto"
+              >
+                <pre class="whitespace-pre-wrap text-sm font-mono">{{
+                  scanResults
+                }}</pre>
+              </div>
+              <div class="flex justify-end mt-4 space-x-3">
+                <button
+                  mat-button
+                  class="text-sm flex items-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                >
+                  <mat-icon class="h-5 w-5 mr-1">content_copy</mat-icon>
+                  {{ "copy" | translate }}
+                </button>
+                <button
+                  mat-button
+                  class="text-sm flex items-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                >
+                  <mat-icon class="h-5 w-5 mr-1">save_alt</mat-icon>
+                  {{ "save" | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer
+        class="py-4 px-6 bg-black/10 backdrop-blur-sm text-sm flex justify-between items-center"
+      >
+        <div>{{ "lastUpdated" | translate }}</div>
+        <div class="flex items-center">
+          <mat-icon class="h-4 w-4 mr-1 text-white-300">wifi</mat-icon>
+          <span class="text-green-500">{{ "connectedToKobo" | translate }}</span>
+        </div>
+      </footer>
+
+      <!-- Loading Overlay -->
+      <div
+        *ngIf="isLoading"
+        class="fixed inset-0 flex flex-col items-center justify-center bg-gray-900/60 backdrop-blur-sm z-50"
+        aria-live="polite"
+      >
+        <mat-spinner diameter="48" class="animate-pulse"></mat-spinner>
+        <p class="mt-4 text-white font-medium">
+          {{ "processingDocument" | translate }}
+        </p>
       </div>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer
-    class="py-4 px-6 bg-black/10 backdrop-blur-sm text-sm flex justify-between items-center"
-  >
-    <div>{{ "lastUpdated" | translate }}</div>
-    <div class="flex items-center">
-      <mat-icon class="h-4 w-4 mr-1 text-white-300">wifi</mat-icon>
-      <span class="text-green-500">{{ "connectedToKobo" | translate }}</span>
+    <!-- Help Popup -->
+    <div
+      *ngIf="isInfoOpen"
+      class="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="relative bg-white text-gray-700 rounded-lg p-6 w-full max-w-md mx-4"
+      >
+        <button
+          class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200"
+          (click)="closeInfo()"
+          aria-label="Close help popup"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <h2 class="text-xl font-bold mb-4 text-gray-900">
+          {{ "information" | translate }}
+        </h2>
+        <h4 class="mt-4 font-semibold">
+          {{ "supportInfoTitle" | translate }}
+        </h4>
+        <p class="text-gray-600 mb-4" [innerHTML]="'supportInfo' | translate"></p>
+        <h4 class="mt-4 font-semibold">
+          {{ "developmentCreditTitle" | translate }}
+        </h4>
+        <p class="text-gray-600 mb-4" [innerHTML]="'developmentCredit' | translate"></p>
+        <h4 class="mt-4 font-semibold">
+          {{ "openSourceInfoTitle" | translate }}
+        </h4>
+        <p class="text-gray-600 mb-4" [innerHTML]="'openSourceInfo' | translate"></p>
+        <button
+          mat-button
+          class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          (click)="closeInfo()"
+        >
+          {{ "close" | translate }}
+        </button>
+      </div>
     </div>
-  </footer>
 
-  <!-- Loading Overlay -->
-  <div
-    *ngIf="isLoading"
-    class="fixed inset-0 flex flex-col items-center justify-center bg-gray-900/60 backdrop-blur-sm z-50"
-    aria-live="polite"
-  >
-    <mat-spinner diameter="48" class="animate-pulse"></mat-spinner>
-    <p class="mt-4 text-white font-medium">
-      {{ "processingDocument" | translate }}
-    </p>
-  </div>
-</div>
-
-<!-- Help Popup -->
-<div
-  *ngIf="isInfoOpen"
-  class="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
->
-  <div
-    class="relative bg-white text-gray-700 rounded-lg p-6 w-full max-w-md mx-4"
-  >
     <button
-      class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200"
-      (click)="closeInfo()"
-      aria-label="Close help popup"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-    <h2 class="text-xl font-bold mb-4 text-gray-900">
-      {{ "information" | translate }}
-    </h2>
-    <h4 class="mt-4 font-semibold">{{ "supportInfoTitle" | translate }}</h4>
-    <p class="text-gray-600 mb-4" [innerHTML]="'supportInfo' | translate"></p>
-    <h4 class="mt-4 font-semibold">
-      {{ "developmentCreditTitle" | translate }}
-    </h4>
-    <p
-      class="text-gray-600 mb-4"
-      [innerHTML]="'developmentCredit' | translate"
-    ></p>
-    <h4 class="mt-4 font-semibold">{{ "openSourceInfoTitle" | translate }}</h4>
-    <p
-      class="text-gray-600 mb-4"
-      [innerHTML]="'openSourceInfo' | translate"
-    ></p>
-    <button
-      mat-button
-      class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-      (click)="closeInfo()"
-    >
-      {{ "close" | translate }}
-    </button>
-  </div>
-</div>
+    class="fixed bottom-24 right-4 z-50 w-16 h-16 flex items-center justify-center dark:bg-gray-700 text-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-transform transform hover:scale-105"
+    aria-label="Floating Help Button"
+    (click)="showInfo()"
+  >
+    <mat-icon>info</mat-icon>
+  </button>  
 
-<style>
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .language-dropdown {
-    animation: fadeIn 0.2s ease-out;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  }
-  [dir="rtl"] .language-dropdown {
-    left: 0;
-    right: auto;
-  }
-  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
-    display: none !important;
-  }
-  .header-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-  }
-  button:focus-visible {
-    outline: 2px solid #60a5fa;
-    outline-offset: 2px;
-  }
-</style>
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .language-dropdown {
+        animation: fadeIn 0.2s ease-out;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      }
+      [dir="rtl"] .language-dropdown {
+        left: 0;
+        right: auto;
+      }
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+      }
+      .header-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+      }
+      button:focus-visible {
+        outline: 2px solid #60a5fa;
+        outline-offset: 2px;
+      }
+    </style>
