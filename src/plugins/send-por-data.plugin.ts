@@ -1,4 +1,3 @@
-// send-por-data.plugin.ts
 import { registerPlugin } from '@capacitor/core';
 
 /**
@@ -18,7 +17,11 @@ export interface SendDataPlugin {
     gender: string;
     frontImage: string;
     backImage: string;
+    DocumentFace: string;
     dependentsInfo: string;
+    dateOfIssue: string;
+    documentAdditionalNumber: string;
+    dateOfExpiry: string;
   }): Promise<void>;
 }
 
