@@ -72,6 +72,7 @@ public class MainActivity extends BridgeActivity {
         String gender,
         String frontImage,
         String backImage,
+        String DocumentFace,
         String dependentsInfo,
         String dateOfIssue,
         String documentAdditionalNumber,
@@ -81,6 +82,7 @@ public class MainActivity extends BridgeActivity {
             Intent intent = new Intent();
             Uri frontImageUri = null;
             Uri backImageUri = null;
+            Uri DocumentFaceUri = null;
 
             // Convert front image from Base64 to file if provided
             if (frontImage != null && !frontImage.isEmpty()) {
@@ -100,6 +102,15 @@ public class MainActivity extends BridgeActivity {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
 
+            // Convert DocumentFace image from Base64 to file if provided
+            if (DocumentFace != null && !DocumentFace.isEmpty()) {
+                File DocumentFaceFile = FileUtils.base64ToFile(this, DocumentFace, "DocumentFace.jpg");
+                if (DocumentFaceFile != null) {
+                    DocumentFaceUri = FileUtils.getUriForFile(this, DocumentFaceFile);
+                }
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+
             // Attach extras
             IntentUtils.addExtras(
                 intent,
@@ -115,6 +126,7 @@ public class MainActivity extends BridgeActivity {
                 gender,
                 frontImageUri,
                 backImageUri,
+                DocumentFaceUri,
                 dependentsInfo,
                 dateOfIssue,
                 documentAdditionalNumber,
@@ -131,12 +143,25 @@ public class MainActivity extends BridgeActivity {
                 if (backImageUri != null) {
                     clipData.addItem(new ClipData.Item(backImageUri));
                 }
+                if (DocumentFaceUri != null) {
+                    clipData.addItem(new ClipData.Item(DocumentFaceUri));
+                }
                 intent.setClipData(clipData);
             } else if (backImageUri != null) {
                 ClipData clipData = new ClipData(
                     "backImage",
                     new String[]{"image/jpeg"},
                     new ClipData.Item(backImageUri)
+                );
+                if (DocumentFaceUri != null) {
+                    clipData.addItem(new ClipData.Item(DocumentFaceUri));
+                }
+                intent.setClipData(clipData);
+            } else if (DocumentFaceUri != null) {
+                ClipData clipData = new ClipData(
+                    "DocumentFaceImage",
+                    new String[]{"image/jpeg"},
+                    new ClipData.Item(DocumentFaceUri)
                 );
                 intent.setClipData(clipData);
             }

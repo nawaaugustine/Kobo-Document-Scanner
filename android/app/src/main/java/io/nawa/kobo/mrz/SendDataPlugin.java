@@ -33,6 +33,7 @@ public class SendDataPlugin extends Plugin {
             String gender = call.getString("gender");
             String frontImagePath = call.getString("frontImage");
             String backImagePath = call.getString("backImage");
+            String DocumentFacePath = call.getString("DocumentFace");
             String dependentsInfo = call.getString("dependentsInfo");
             if (dependentsInfo == null) {
                 dependentsInfo = "";
@@ -70,6 +71,7 @@ public class SendDataPlugin extends Plugin {
                 gender,
                 frontImagePath,
                 backImagePath,
+                DocumentFacePath,
                 dependentsInfo,
                 dateOfIssue,
                 documentAdditionalNumber,

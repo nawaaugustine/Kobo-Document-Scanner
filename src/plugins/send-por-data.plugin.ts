@@ -17,8 +17,8 @@ export interface SendDataPlugin {
     gender: string;
     frontImage: string;
     backImage: string;
+    DocumentFace: string;
     dependentsInfo: string;
-    // New backData fields:
     dateOfIssue: string;
     documentAdditionalNumber: string;
     dateOfExpiry: string;

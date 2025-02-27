@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as BlinkID from '@microblink/blinkid-capacitor';
 import { environment } from '../../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
+import { LogUtil } from '../utils/log-util';
 
 /**
  * Interface for final, structured scan results.
@@ -26,6 +27,7 @@ export interface ScanResult {
   frontImage: string;
   backImage: string;
   dependentsInfo: any;
+  DocumentFace: string;
 }
 
 /**
@@ -133,6 +135,7 @@ export class BlinkIdScanningService {
   private extractResult(result: any): ScanResult | null {
     const frontVizResult = result.frontVizResult;
     const backVizResult = result.backVizResult;
+
     if (
       (!frontVizResult || frontVizResult.empty) &&
       (!backVizResult || backVizResult.empty)
@@ -179,9 +182,12 @@ export class BlinkIdScanningService {
     const backImage = result.fullDocumentBackImage
       ? `data:image/jpg;base64,${result.fullDocumentBackImage}`
       : '';
+    const DocumentFace = result.faceImage
+      ? `data:image/jpg;base64,${result.faceImage}`
+      : '';
     const dependentsInfo = result.dependentsInfo || '';
 
-    return { frontData, backData, frontImage, backImage, dependentsInfo };
+    return { frontData, backData, frontImage, backImage, dependentsInfo, DocumentFace };
   }
 
   /**
@@ -202,19 +208,19 @@ export class BlinkIdScanningService {
    * @param result Raw single item result from plugin.
    */
   private extractSingleSideResult(result: any): ScanResult | null {
-    const frontVizResult = result.frontVizResult;
-    if (!frontVizResult || frontVizResult.empty) {
-      return null;
-    }
+    const frontVizResult = result;
+    
+    //const resultData = JSON.stringify(frontVizResult, null, 2);
+    //LogUtil.logLongMessage(resultData, 'Result Data');
 
     const additionalAddress = frontVizResult?.additionalAddressInformation?.description || '';
     const [province, district, village] = additionalAddress.split(' ') || ['', '', ''];
 
     const frontData = {
-      fullName: frontVizResult.fullName?.description || '',
+      fullName: frontVizResult.fullName?.description || frontVizResult.firstName?.description || '',
       dateOfBirth: frontVizResult.dateOfBirth?.originalDateStringResult?.description || '',
       documentNumber: frontVizResult.documentNumber?.description || '',
-      fathersName: result.fathersName?.description || '',
+      fathersName: result.fathersName?.description || frontVizResult.lastName?.description || '',
       address: result.address?.description?.replace(/\n/g, ' ') || '',
       province,
       district,
@@ -232,8 +238,11 @@ export class BlinkIdScanningService {
       ? `data:image/jpg;base64,${result.fullDocumentImage}`
       : '';
     const backImage = '';
+    const DocumentFace = result.faceImage
+    ? `data:image/jpg;base64,${result.faceImage}`
+    : '';
     const dependentsInfo = result.dependentsInfo || '';
 
-    return { frontData, backData, frontImage, backImage, dependentsInfo };
+    return { frontData, backData, frontImage, backImage, dependentsInfo, DocumentFace };
   }
 }

@@ -29,6 +29,7 @@ public class IntentUtils {
         public final String gender;
         public final Uri frontImageUri;
         public final Uri backImageUri;
+        public final Uri DocumentFaceUri;
         public final String dependentsInfo;
         public final String dateOfIssue;
         public final String documentAdditionalNumber;
@@ -47,6 +48,7 @@ public class IntentUtils {
             String gender,
             Uri frontImageUri,
             Uri backImageUri,
+            Uri DocumentFaceUri,
             String dependentsInfo,
             String dateOfIssue,
             String documentAdditionalNumber,
@@ -64,6 +66,7 @@ public class IntentUtils {
             this.gender = gender;
             this.frontImageUri = frontImageUri;
             this.backImageUri = backImageUri;
+            this.DocumentFaceUri = DocumentFaceUri;
             this.dependentsInfo = dependentsInfo;
             this.dateOfIssue = dateOfIssue;
             this.documentAdditionalNumber = documentAdditionalNumber;
@@ -88,6 +91,7 @@ public class IntentUtils {
         String gender,
         Uri frontImageUri,
         Uri backImageUri,
+        Uri DocumentFaceUri,
         String dependentsInfo,
         String dateOfIssue,
         String documentAdditionalNumber,
@@ -115,6 +119,19 @@ public class IntentUtils {
         }
         if (backImageUri != null) {
             intent.putExtra("backImageUri", backImageUri.toString());
+        }
+        if (DocumentFaceUri != null) {
+            intent.putExtra("DocumentFaceUri", DocumentFaceUri.toString());
+        }
+
+        if (frontImageUri != null) {
+            intent.putExtra("frontImageUri_dep", frontImageUri.toString());
+        }
+        if (backImageUri != null) {
+            intent.putExtra("backImageUri_dep", backImageUri.toString());
+        }
+        if (DocumentFaceUri != null) {
+            intent.putExtra("DocumentFaceUri_dep", DocumentFaceUri.toString());
         }
 
         intent.putExtra("dependentsInfo", dependentsInfo);
@@ -183,14 +200,19 @@ public class IntentUtils {
 
         Uri frontImageUri = null;
         Uri backImageUri = null;
+        Uri DocumentFaceUri = null;
         try {
             String frontImageStr = intent.getStringExtra("frontImageUri");
             String backImageStr = intent.getStringExtra("backImageUri");
+            String DocumentFaceStr = intent.getStringExtra("DocumentFaceUri");
             if (frontImageStr != null) {
                 frontImageUri = Uri.parse(frontImageStr);
             }
             if (backImageStr != null) {
                 backImageUri = Uri.parse(backImageStr);
+            }
+            if (DocumentFaceStr != null) {
+                DocumentFaceUri = Uri.parse(DocumentFaceStr);
             }
         } catch (Exception ignored) {
         }
@@ -213,6 +235,7 @@ public class IntentUtils {
             gender,
             frontImageUri,
             backImageUri,
+            DocumentFaceUri,
             dependentsInfo,
             dateOfIssue,
             documentAdditionalNumber,
