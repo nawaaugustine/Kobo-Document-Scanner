@@ -1,5 +1,3 @@
-/* IntentUtils.java */
-
 package io.nawa.kobo.mrz;
 
 import android.content.Intent;
@@ -13,9 +11,6 @@ import org.json.JSONObject;
  */
 public class IntentUtils {
 
-    /**
-     * Data structure for capturing relevant fields from the Intent.
-     */
     public static class Data {
         public final String dateOfBirth;
         public final String CoAAddress;
@@ -36,23 +31,23 @@ public class IntentUtils {
         public final String dateOfExpiry;
 
         public Data(
-            String dateOfBirth,
-            String CoAAddress,
-            String province,
-            String district,
-            String village,
-            String documentNumber,
-            String fullName,
-            String fathersName,
-            int age,
-            String gender,
-            Uri frontImageUri,
-            Uri backImageUri,
-            Uri DocumentFaceUri,
-            String dependentsInfo,
-            String dateOfIssue,
-            String documentAdditionalNumber,
-            String dateOfExpiry
+                String dateOfBirth,
+                String CoAAddress,
+                String province,
+                String district,
+                String village,
+                String documentNumber,
+                String fullName,
+                String fathersName,
+                int age,
+                String gender,
+                Uri frontImageUri,
+                Uri backImageUri,
+                Uri DocumentFaceUri,
+                String dependentsInfo,
+                String dateOfIssue,
+                String documentAdditionalNumber,
+                String dateOfExpiry
         ) {
             this.dateOfBirth = dateOfBirth;
             this.CoAAddress = CoAAddress;
@@ -74,28 +69,25 @@ public class IntentUtils {
         }
     }
 
-    /**
-     * Adds all relevant fields as extras to the provided Intent. Also handles dependent info if present.
-     */
     public static void addExtras(
-        Intent intent,
-        String dateOfBirth,
-        String CoAAddress,
-        String province,
-        String district,
-        String village,
-        String documentNumber,
-        String fullName,
-        String fathersName,
-        int age,
-        String gender,
-        Uri frontImageUri,
-        Uri backImageUri,
-        Uri DocumentFaceUri,
-        String dependentsInfo,
-        String dateOfIssue,
-        String documentAdditionalNumber,
-        String dateOfExpiry
+            Intent intent,
+            String dateOfBirth,
+            String CoAAddress,
+            String province,
+            String district,
+            String village,
+            String documentNumber,
+            String fullName,
+            String fathersName,
+            int age,
+            String gender,
+            Uri frontImageUri,
+            Uri backImageUri,
+            Uri DocumentFaceUri,
+            String dependentsInfo,
+            String dateOfIssue,
+            String documentAdditionalNumber,
+            String dateOfExpiry
     ) {
         intent.putExtra("dateOfBirth", dateOfBirth);
         intent.putExtra("CoAAddress", CoAAddress);
@@ -107,23 +99,14 @@ public class IntentUtils {
         intent.putExtra("fathersName", fathersName);
         intent.putExtra("age", age);
         intent.putExtra("gender", gender);
+
+        // Existing "_dep" extras
         intent.putExtra("fullName_dep", fullName);
         intent.putExtra("dateOfBirth_dep", dateOfBirth);
         intent.putExtra("documentNumber_dep", documentNumber);
         intent.putExtra("fathersName_dep", fathersName);
         intent.putExtra("gender_dep", gender);
         intent.putExtra("age_dep", age);
-
-        if (frontImageUri != null) {
-            intent.putExtra("frontImageUri", frontImageUri.toString());
-        }
-        if (backImageUri != null) {
-            intent.putExtra("backImageUri", backImageUri.toString());
-        }
-        if (DocumentFaceUri != null) {
-            intent.putExtra("DocumentFaceUri", DocumentFaceUri.toString());
-        }
-
         if (frontImageUri != null) {
             intent.putExtra("frontImageUri_dep", frontImageUri.toString());
         }
@@ -134,19 +117,37 @@ public class IntentUtils {
             intent.putExtra("DocumentFaceUri_dep", DocumentFaceUri.toString());
         }
 
+        // Set images
+        if (frontImageUri != null) {
+            intent.putExtra("frontImageUri", frontImageUri.toString());
+        }
+        if (backImageUri != null) {
+            intent.putExtra("backImageUri", backImageUri.toString());
+        }
+        if (DocumentFaceUri != null) {
+            intent.putExtra("DocumentFaceUri", DocumentFaceUri.toString());
+        }
+
+        // Primary extras
         intent.putExtra("dependentsInfo", dependentsInfo);
         intent.putExtra("dateOfIssue", dateOfIssue);
         intent.putExtra("documentAdditionalNumber", documentAdditionalNumber);
         intent.putExtra("dateOfExpiry", dateOfExpiry);
 
+        // Handle dependents: build semicolon-delimited extras
         if (dependentsInfo != null && !dependentsInfo.isEmpty()) {
             try {
                 JSONArray dependents = new JSONArray(dependentsInfo);
                 int count = dependents.length();
                 intent.putExtra("dependentCount", count);
+
+                StringBuilder dobBuilder = new StringBuilder();
+                StringBuilder sexBuilder = new StringBuilder();
+                StringBuilder docNumBuilder = new StringBuilder();
+                StringBuilder fullNameBuilder = new StringBuilder();
+
                 for (int i = 0; i < count; i++) {
                     JSONObject dep = dependents.getJSONObject(i);
-                    String index = String.format("%02d", i + 1);
 
                     String depDOB = "";
                     String depSex = "";
@@ -173,19 +174,28 @@ public class IntentUtils {
                         depFullName = fullNameObj.optString("description", "");
                     }
 
-                    intent.putExtra("dependent" + index + "_dateOfBirth", depDOB);
-                    intent.putExtra("dependent" + index + "_sex", depSex);
-                    intent.putExtra("dependent" + index + "_documentNumber", depDocNum);
-                    intent.putExtra("dependent" + index + "_fullName", depFullName);
+                    if (i > 0) {
+                        dobBuilder.append(";");
+                        sexBuilder.append(";");
+                        docNumBuilder.append(";");
+                        fullNameBuilder.append(";");
+                    }
+                    dobBuilder.append(depDOB);
+                    sexBuilder.append(depSex);
+                    docNumBuilder.append(depDocNum);
+                    fullNameBuilder.append(depFullName);
                 }
+
+                intent.putExtra("dependent_dateOfBirth", dobBuilder.toString());
+                intent.putExtra("dependent_sex", sexBuilder.toString());
+                intent.putExtra("dependent_documentNumber", docNumBuilder.toString());
+                intent.putExtra("dependent_fullName", fullNameBuilder.toString());
+
             } catch (JSONException ignored) {
             }
         }
     }
 
-    /**
-     * Extracts relevant extras from a provided Intent into a Data object.
-     */
     public static Data extractExtras(Intent intent) {
         String dateOfBirth = intent.getStringExtra("dateOfBirth");
         String CoAAddress = intent.getStringExtra("CoAAddress");
@@ -223,23 +233,23 @@ public class IntentUtils {
         String dateOfExpiry = intent.getStringExtra("dateOfExpiry");
 
         return new Data(
-            dateOfBirth,
-            CoAAddress,
-            province,
-            district,
-            village,
-            documentNumber,
-            fullName,
-            fathersName,
-            age,
-            gender,
-            frontImageUri,
-            backImageUri,
-            DocumentFaceUri,
-            dependentsInfo,
-            dateOfIssue,
-            documentAdditionalNumber,
-            dateOfExpiry
+                dateOfBirth,
+                CoAAddress,
+                province,
+                district,
+                village,
+                documentNumber,
+                fullName,
+                fathersName,
+                age,
+                gender,
+                frontImageUri,
+                backImageUri,
+                DocumentFaceUri,
+                dependentsInfo,
+                dateOfIssue,
+                documentAdditionalNumber,
+                dateOfExpiry
         );
     }
 }
