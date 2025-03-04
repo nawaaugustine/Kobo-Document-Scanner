@@ -176,7 +176,7 @@ export class BlinkIdScanningService {
 
     const backData = {
       dateOfIssue: backVizResult?.dateOfIssue?.originalDateStringResult?.description || '',
-      documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.description || '',
+      documentAdditionalNumber: backVizResult?.documentAdditionalNumber?.description || result.documentAdditionalNumber?.description || '',
       dateOfExpiry: backVizResult?.dateOfExpiry?.originalDateStringResult?.description || ''
     };
 
