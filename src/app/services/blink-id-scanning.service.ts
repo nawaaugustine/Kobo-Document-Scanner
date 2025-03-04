@@ -134,8 +134,8 @@ export class BlinkIdScanningService {
    */
   private extractResult(result: any): ScanResult | null {
 
-    const resultData = JSON.stringify(result, null, 2);
-    LogUtil.logLongMessage(resultData, 'Result Data');
+    //const resultData = JSON.stringify(result, null, 2);
+    //LogUtil.logLongMessage(resultData, 'Result Data');
 
     const frontVizResult = result.frontVizResult;
     const backVizResult = result.backVizResult;
