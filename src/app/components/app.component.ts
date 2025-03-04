@@ -16,21 +16,20 @@ import { TranslationService } from '../services/translation.service';
 import SendData from '../../plugins/send-por-data.plugin';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    TranslateModule,
-  ],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatCardModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        TranslateModule,
+    ]
 })
 export class AppComponent implements OnInit {
   // Wrap the toggle button and dropdown in a container.
