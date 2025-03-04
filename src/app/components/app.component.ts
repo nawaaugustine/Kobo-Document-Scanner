@@ -231,13 +231,16 @@ export class AppComponent implements OnInit {
   private calculateAge(dateOfBirth: string): number {
     let birthDate: Date | null = null;
   
-    // Format with delimiters (e.g., "08/01/1979" or "08.01.1979")
-    if (dateOfBirth.includes('/') || dateOfBirth.includes('.')) {
-      const normalizedDate = dateOfBirth.replace(/[./]/g, '/');
+    // Format with delimiters (e.g., "08/01/1979", "08.01.1979", or "01-01-2003")
+    if (dateOfBirth.includes('/') || dateOfBirth.includes('.') || dateOfBirth.includes('-')) {
+      const normalizedDate = dateOfBirth.replace(/[\/.\-]/g, '/');
       const parts = normalizedDate.split('/');
       if (parts.length !== 3) return 0;
   
-      const [day, month, year] = parts.map(Number);
+      const [dayStr, monthStr, yearStr] = parts;
+      const day = Number(dayStr);
+      const month = Number(monthStr);
+      const year = Number(yearStr);
       if (!day || !month || !year) return 0;
   
       birthDate = new Date(year, month - 1, day);
@@ -252,7 +255,6 @@ export class AppComponent implements OnInit {
       const month = Number(monthPart);
       const day = Number(dayPart);
   
-      // Heuristic to determine century based on current year cutoff
       const currentYear = new Date().getFullYear();
       const cutoff = currentYear % 100;
       const fullYear = (year > cutoff ? 1900 : 2000) + year;
@@ -263,7 +265,7 @@ export class AppComponent implements OnInit {
     }
   
     return this.getAge(birthDate);
-  }
+  }  
   
   private getAge(birthDate: Date): number {
     const now = new Date();

@@ -133,6 +133,10 @@ export class BlinkIdScanningService {
    * @param result Raw single item result from plugin.
    */
   private extractResult(result: any): ScanResult | null {
+
+    const resultData = JSON.stringify(result, null, 2);
+    LogUtil.logLongMessage(resultData, 'Result Data');
+
     const frontVizResult = result.frontVizResult;
     const backVizResult = result.backVizResult;
 
@@ -209,9 +213,6 @@ export class BlinkIdScanningService {
    */
   private extractSingleSideResult(result: any): ScanResult | null {
     const frontVizResult = result;
-    
-    //const resultData = JSON.stringify(frontVizResult, null, 2);
-    //LogUtil.logLongMessage(resultData, 'Result Data');
 
     const additionalAddress = frontVizResult?.additionalAddressInformation?.description || '';
     const [province, district, village] = additionalAddress.split(' ') || ['', '', ''];
