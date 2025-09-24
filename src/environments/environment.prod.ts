@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    MICROBLINK_LICENSE_KEY: 'sRwCABBpby5uYXdhLmtvYm8ubXJ6AGxleUpEY21WaGRHVmtUMjRpT2pFM05ERXdNVFEwTlRneU1UVXNJa055WldGMFpXUkdiM0lpT2lJMU1HUTVNak0wTmkwNFltVm1MVGRsWldZdE9UY3paaTFtTVdJNU9HTXpZMkk0TWpFaWZRPT1NIREPklBYXBfM+HeiKkTS1ek/FZI26d8c97c0TgY+Ia+Y+H8GQiPIbBXBGzkUOVKvwlOKxkc7EDlc2vCYXvB/hZBxKsQB+NMGKTKkq9+b4O79pcPuoMx4ZWuYweZrbPFFgepzOfXlI61Medmpn2czpyTW'
+    MICROBLINK_LICENSE_KEY: 'your_license_key_here'
   };
   
