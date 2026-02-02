@@ -5,29 +5,36 @@ import { TranslateService } from '@ngx-translate/core';
 import { LogUtil } from '../utils/log-util';
 
 /**
+ * Detailed types for scanned document data.
+ */
+export interface FrontData {
+  fullName: string;
+  dateOfBirth: string;
+  documentNumber: string;
+  fathersName: string;
+  address: string;
+  province: string;
+  district: string;
+  village: string;
+  sex: string;
+}
+
+export interface BackData {
+  dateOfIssue: string;
+  documentAdditionalNumber: string;
+  dateOfExpiry: string;
+}
+
+/**
  * Interface for final, structured scan results.
  */
 export interface ScanResult {
-  frontData: {
-    fullName: string;
-    dateOfBirth: string;
-    documentNumber: string;
-    fathersName: string;
-    address: string;
-    province: string;
-    district: string;
-    village: string;
-    sex: string;
-  };
-  backData: {
-    dateOfIssue: string;
-    documentAdditionalNumber: string;
-    dateOfExpiry: string;
-  };
-  frontImage: string;
-  backImage: string;
-  dependentsInfo: any;
-  DocumentFace: string;
+  frontData: FrontData;
+  backData: BackData;
+  frontImage: string; // data URL or empty string
+  backImage: string; // data URL or empty string
+  dependentsInfo: string | Record<string, unknown> | unknown[] | null;
+  DocumentFace: string; // data URL or empty string
 }
 
 /**

@@ -14,6 +14,8 @@ import { BlinkIdScanningService, ScanResult } from '../services/blink-id-scannin
 import { ThemeService } from '../services/theme.service';
 import { TranslationService } from '../services/translation.service';
 import SendData from '../../plugins/send-por-data.plugin';
+import { calculateAge } from '../utils/date-util';
+import { formatScanResults } from '../utils/format-results';
 
 @Component({
     selector: 'app-root',
@@ -171,22 +173,7 @@ export class AppComponent implements OnInit {
   }
 
   private formatResults(results: ScanResult[]): string {
-    return results
-      .map((result) => {
-        const { frontData, backData } = result;
-        return `
-          ${this.translate.instant('results.fullName')}: ${frontData.fullName}
-          ${this.translate.instant('results.dateOfBirth')}: ${frontData.dateOfBirth}
-          ${this.translate.instant('results.documentNumber')}: ${frontData.documentNumber}
-          ${this.translate.instant('results.fathersName')}: ${frontData.fathersName}
-          ${this.translate.instant('results.address')}: ${frontData.address}
-          ${this.translate.instant('results.sex')}: ${frontData.sex}
-          ${this.translate.instant('results.dateOfIssue')}: ${backData.dateOfIssue}
-          ${this.translate.instant('results.documentAdditionalNumber')}: ${backData.documentAdditionalNumber}
-          ${this.translate.instant('results.dateOfExpiry')}: ${backData.dateOfExpiry}
-        `.trim();
-      })
-      .join('\n\n');
+    return formatScanResults(results, (key: string) => this.translate.instant(key));
   }
 
   private async sendDataToKoboCollect(result: ScanResult): Promise<void> {
@@ -209,7 +196,7 @@ export class AppComponent implements OnInit {
             documentNumber: frontData.documentNumber,
             fullName: frontData.fullName,
             fathersName: frontData.fathersName,
-            age: this.calculateAge(frontData.dateOfBirth || '01.01.1970'),
+            age: calculateAge(frontData.dateOfBirth || '01.01.1970'),
             gender: frontData.sex,
             frontImage: result.frontImage,
             backImage: result.backImage,
@@ -227,54 +214,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private calculateAge(dateOfBirth: string): number {
-    let birthDate: Date | null = null;
-  
-    // Format with delimiters (e.g., "08/01/1979", "08.01.1979", or "01-01-2003")
-    if (dateOfBirth.includes('/') || dateOfBirth.includes('.') || dateOfBirth.includes('-')) {
-      const normalizedDate = dateOfBirth.replace(/[\/.\-]/g, '/');
-      const parts = normalizedDate.split('/');
-      if (parts.length !== 3) return 0;
-  
-      const [dayStr, monthStr, yearStr] = parts;
-      const day = Number(dayStr);
-      const month = Number(monthStr);
-      const year = Number(yearStr);
-      if (!day || !month || !year) return 0;
-  
-      birthDate = new Date(year, month - 1, day);
-    }
-    // Format without delimiters (e.g., "790108" where "79" = year, "01" = month, "08" = day)
-    else if (/^\d{6}$/.test(dateOfBirth)) {
-      const yearPart = dateOfBirth.slice(0, 2);
-      const monthPart = dateOfBirth.slice(2, 4);
-      const dayPart = dateOfBirth.slice(4, 6);
-  
-      const year = Number(yearPart);
-      const month = Number(monthPart);
-      const day = Number(dayPart);
-  
-      const currentYear = new Date().getFullYear();
-      const cutoff = currentYear % 100;
-      const fullYear = (year > cutoff ? 1900 : 2000) + year;
-  
-      birthDate = new Date(fullYear, month - 1, day);
-    } else {
-      return 0;
-    }
-  
-    return this.getAge(birthDate);
-  }  
-  
-  private getAge(birthDate: Date): number {
-    const now = new Date();
-    let age = now.getFullYear() - birthDate.getFullYear();
-    const monthDiff = now.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  }
+  // Age calculation delegated to `src/app/utils/date-util.ts` (calculateAge/getAge)
 
   private handleError(error: unknown): void {
     this.errorMessage = this.translate.instant('error.scanFailed');
